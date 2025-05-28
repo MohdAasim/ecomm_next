@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  app:
+    container_name: nextjs-app
+    build: .
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000" # Next.js dev port
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true # Optional: helps with file watching in Docker
+      - NEXT_TELEMETRY_DISABLED=1 # Optional: disables Next.js telemetry
+    command: sh -c "npm install && npm run dev"

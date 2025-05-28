@@ -1,0 +1,29 @@
+.address-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.address-form input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Responsive: stack inputs on smaller screens */
+@media (max-width: 600px) {
+  .address-form {
+    grid-template-columns: 1fr;
+  }
+}
+
+.error {
+  color: #b30000;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}

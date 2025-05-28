@@ -1,0 +1,136 @@
+.checkout-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 24px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+.checkout-title {
+  font-size: 28px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.section-title {
+  font-size: 18px;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.address-section,
+.new-address-section {
+  margin-bottom: 20px;
+}
+
+.address-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.address-item {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+  font-size: 14px;
+}
+
+.address-item:hover {
+  border-color: #007bff;
+}
+
+.radio-input {
+  margin-right: 8px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #555;
+  margin-top: 10px;
+}
+
+.checkbox-input {
+  margin-right: 6px;
+}
+
+.total-amount {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 20px 0;
+  text-align: right;
+}
+
+.price {
+  color: #28a745;
+}
+
+.checkout-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.checkout-button:hover {
+  background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+  .checkout-container {
+    padding: 16px;
+    margin: 20px;
+  }
+
+  .checkout-title {
+    font-size: 24px;
+  }
+
+  .section-title {
+    font-size: 16px;
+  }
+
+  .total-amount {
+    text-align: left;
+    font-size: 16px;
+  }
+
+  .address-item {
+    font-size: 13px;
+    padding: 8px;
+  }
+
+  .checkout-button {
+    font-size: 15px;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .checkout-title {
+    font-size: 20px;
+  }
+
+  .section-title {
+    font-size: 15px;
+  }
+
+  .address-item {
+    font-size: 12px;
+  }
+  .checkout-button {
+    font-size: 14px;
+  }
+}
