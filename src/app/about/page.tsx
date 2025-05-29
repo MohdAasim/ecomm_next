@@ -1,8 +1,8 @@
 import React from "react";
 
-const AboutUs: React.FC<React.HTMLAttributes<HTMLDivElement>> = (props) => {
+const AboutUs = () => {
   return (
-    <div style={styles.container} {...props}>
+    <div style={styles.container}>
       <h1>About Us</h1>
       <p>
         Welcome to Ecommerce Client — your trusted online store for quality

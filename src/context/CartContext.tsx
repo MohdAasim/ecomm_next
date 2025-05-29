@@ -146,7 +146,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-/* eslint-disable */
 export const useCart = () => {
   const ctx = useContext(CartContext);
   if (!ctx) throw new Error("useCart must be used within CartProvider");
