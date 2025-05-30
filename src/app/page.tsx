@@ -1,110 +1,73 @@
-"use client";
-import React, { useCallback, useMemo, useState } from "react";
-import ItemCard from "@/components/shared/itemCard/ItemCard";
-import { useProducts } from "@/hooks/useProducts";
-import ShimmerUi from "@/components/ShimmerUi";
-import Pagination from "@/components/shared/pagination/Pagination";
-import ErrorMessage from "@/components/shared/errorMessage/ErrorMessage";
-import SearchBar from "@/components/shared/searchBar/SearchBar";
-import { useDebouncedEffect } from "@/hooks/useDebouncedEffect";
-import Filter from "@/components/shared/filters/Filter";
-import "./ProductListing.css";
+import { getProducts } from "@/zserver/services/productService";
+import ProductListingClient from "./ProductListingClient";
+import { Product } from "@/types/Product";
 import Link from "next/link";
+import ItemCard from "@/components/shared/itemCard/ItemCard";
+import ErrorMessage from "@/components/shared/errorMessage/ErrorMessage";
 
-const ProductListing: React.FC = () => {
-  const [page, setPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [query, setQuery] = useState("");
-  const [category, setCategory] = useState("");
-  const [minPrice, setMinPrice] = useState<number | undefined>(undefined);
-  const [maxPrice, setMaxPrice] = useState<number | undefined>(undefined);
+interface PageProps {
+  searchParams: Promise<{
+    page?: string;
+    search?: string;
+    category?: string;
+    minPrice?: string;
+    maxPrice?: string;
+    [key: string]: string | undefined;
+  }>;
+}
 
-  const filters = useMemo(
-    () => ({
-      page,
-      search: query,
-      category,
-      minPrice,
-      maxPrice,
-    }),
-    [page, query, category, minPrice, maxPrice],
-  );
+export default async function ProductListing({ searchParams }: PageProps) {
+  const searchParam = await searchParams;
+  const page = Number(searchParam.page) || 1;
+  const search = searchParam?.search || "";
+  const category = searchParam?.category || "";
+  const minPrice = searchParam?.minPrice
+    ? Number(searchParam.minPrice)
+    : undefined;
+  const maxPrice = searchParam?.maxPrice
+    ? Number(searchParam.maxPrice)
+    : undefined;
 
-  const { items, currentPage, totalPages, loading, error } =
-    useProducts(filters);
+  const { products, currentPage, totalPages } = await getProducts({
+    page,
+    search,
+    category,
+    minPrice,
+    maxPrice,
+  });
 
-  const handleSearch = useCallback(() => {
-    let changed = false;
-
-    setQuery((prevQuery) => {
-      if (prevQuery !== searchTerm) {
-        changed = true;
-        return searchTerm;
-      }
-      return prevQuery;
-    });
-
-    setPage((prevPage) => {
-      if (changed && prevPage !== 1) return 1;
-      return prevPage;
-    });
-  }, [searchTerm]);
-
-  useDebouncedEffect(
-    () => {
-      if (searchTerm.trim() === "") {
-        handleSearch();
-      }
-    },
-    [searchTerm],
-    300,
+  // Convert Sequelize instances to plain objects
+  const plainProducts = products.map(
+    (p: Product & { toJSON?: () => Product }) =>
+      typeof p.toJSON === "function" ? p.toJSON() : p,
   );
 
   return (
-    <div className="container">
-      <div className="top-controls">
-        <SearchBar
-          searchTerm={searchTerm}
-          onSearchTermChange={setSearchTerm}
-          onSearch={handleSearch}
-        />
-        <Filter
-          category={category}
-          minPrice={minPrice}
-          maxPrice={maxPrice}
-          onCategoryChange={setCategory}
-          onMinPriceChange={setMinPrice}
-          onMaxPriceChange={setMaxPrice}
-        />
-      </div>
-      {loading ? (
-        <div className="products-grid">
-          <ShimmerUi />
+    <ProductListingClient
+      products={plainProducts}
+      currentPage={currentPage}
+      totalPages={totalPages}
+      search={search}
+      category={category}
+      minPrice={minPrice}
+      maxPrice={maxPrice}
+    >
+      {" "}
+      {products.length === 0 ? (
+        <div>
+          <ErrorMessage message={"No Product Found"} />{" "}
         </div>
-      ) : error ? (
-        <ErrorMessage message="Failed to load products" />
-      ) : items.length === 0 ? (
-        <ErrorMessage message="No products found." />
       ) : (
         <>
           <div className="products-grid">
-            {items.map((item) => (
+            {products.map((item: Product) => (
               <Link href={"/desc/" + item.id} key={item.id}>
                 <ItemCard data={item} />
               </Link>
             ))}
           </div>
-          {totalPages > 1 && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={(newPage) => setPage(newPage)}
-            />
-          )}
         </>
       )}
-    </div>
+    </ProductListingClient>
   );
-};
-
-export default ProductListing;
+}

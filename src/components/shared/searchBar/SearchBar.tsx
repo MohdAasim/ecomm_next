@@ -4,7 +4,7 @@ import "./SearchBar.css";
 interface SearchBarProps {
   searchTerm: string;
   onSearchTermChange: (value: string) => void;
-  onSearch: () => void;
+  onSearch?: () => void; // optional
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
@@ -20,7 +20,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         value={searchTerm}
         onChange={(e) => onSearchTermChange(e.target.value)}
       />
-      <button onClick={onSearch}>Search</button>
+      {<button onClick={onSearch}>Search</button>}
     </div>
   );
 };

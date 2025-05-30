@@ -1,16 +1,46 @@
-version: "3.8"
-
 services:
   app:
     container_name: nextjs-app
     build: .
     volumes:
       - .:/app
-      - /app/node_modules
     ports:
-      - "3000:3000" # Next.js dev port
+      - "3000:3000"
+    env_file:
+      - .env
     environment:
       - NODE_ENV=development
-      - CHOKIDAR_USEPOLLING=true # Optional: helps with file watching in Docker
-      - NEXT_TELEMETRY_DISABLED=1 # Optional: disables Next.js telemetry
+      - CHOKIDAR_USEPOLLING=true
+      - NEXT_TELEMETRY_DISABLED=1
+    depends_on:
+      db:
+        condition: service_healthy
     command: sh -c "npm install && npm run dev"
+
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "--host=localhost",
+          "--user=root",
+          "--password=${DB_PASSWORD}",
+        ]
+      interval: 30s
+      retries: 10
+      start_period: 60s
+      timeout: 20s
+
+volumes:
+  db-data:

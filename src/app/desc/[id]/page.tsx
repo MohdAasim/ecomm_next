@@ -1,12 +1,16 @@
+import { getProductById } from "@/zserver/services/productService";
 import ProductDesc from "./ProductDesc";
 
-type Param = {
-  params: Promise<{ id: string }>;
-};
-const Page = async ({ params }: Param) => {
-  const { id } = await params;
+interface PageProps {
+  params: { id: string };
+}
 
-  return <ProductDesc id={id} />;
-};
+export default async function Page({ params }: PageProps) {
+  const product = await getProductById(params.id);
 
-export default Page;
+  // Convert to plain object if needed (Sequelize instance)
+  const plainProduct =
+    typeof product.toJSON === "function" ? product.toJSON() : product;
+
+  return <ProductDesc product={plainProduct} />;
+}

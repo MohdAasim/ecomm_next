@@ -3,6 +3,7 @@ import "./globals.css";
 import { AuthProvider } from "../context/AuthContext";
 import { CartProvider } from "../context/CartContext";
 import Header from "@/components/header/Header";
+import { ToastContainer } from "react-toastify";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -21,6 +22,7 @@ export default function RootLayout({
           <CartProvider>
             <Header />
             {children}
+            <ToastContainer position="top-right" autoClose={3000} />
           </CartProvider>
         </AuthProvider>
       </body>
