@@ -1,9 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import {
-  sendOTPService,
-  verifyOTPService,
-} from "@/zserver/actions/authService";
+import { sendOTPService, verifyOTPService } from "@/server/actions/authService";
 import { useAuth } from "@/context/AuthContext";
 import "./SignIn.css";
 

@@ -1,4 +1,4 @@
-import { getProducts } from "@/zserver/actions/productService";
+import { getProducts } from "@/server/actions/productService";
 import ProductListingClient from "./ProductListingClient";
 import { Product } from "@/types/Product";
 import Link from "next/link";

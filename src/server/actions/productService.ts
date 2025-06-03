@@ -1,7 +1,7 @@
 "use server";
 import * as productRepo from "../repositories/productRepository";
 import { Op } from "sequelize";
-import { ALLOWED_CATEGORIES } from "../utils/constants";
+import { ALLOWED_CATEGORIES } from "@/utils/constants";
 
 /**
  * Get a paginated list of products with optional filters.

@@ -9,14 +9,14 @@ interface ItemCardProps {
 
 const ItemCard: React.FC<ItemCardProps> = ({ data }) => {
   // Provide a fallback image URL
-  const imageUrl = data.image_url || "/placeholder.png"; // Make sure /public/placeholder.png exists
+  const imageUrl = data.image_url;
 
   return (
     <div className="card">
       <Image
         className="img_card"
         alt="product-img"
-        src={imageUrl}
+        src={imageUrl as string}
         width={200}
         height={200}
         priority

@@ -1,12 +1,32 @@
-import { getProductById } from "@/zserver/actions/productService";
+import { getProductById, getProducts } from "@/server/actions/productService";
 import ErrorMessage from "@/components/shared/errorMessage/ErrorMessage";
 import Image from "next/image";
 import Operation from "@/components/Product/Operation";
 import "./ProductDesc.css";
+import { Product } from "@/types/Product";
 
 interface PageProps {
   params: Promise<{ id: string }>;
 }
+
+//-------------------------------------
+
+// request comes in, at most once every 60 seconds.
+export const revalidate = 60;
+
+// We'll prerender only the params from `generateStaticParams` at build time.
+// If a request comes in for a path that hasn't been generated,
+// Next.js will server-render the page on-demand.
+export const dynamicParams = true; // or false, to 404 on unknown paths
+
+export async function generateStaticParams() {
+  const { products } = (await getProducts({})) as { products: Product[] };
+  return products.map((post) => ({
+    id: String(post.id),
+  }));
+}
+
+//-------------------------------------
 
 export default async function Page({ params }: PageProps) {
   const resolvedParams = await params;
@@ -24,7 +44,7 @@ export default async function Page({ params }: PageProps) {
     <div className="product-container">
       <div className="product-card">
         <Image
-          src={product.image_url || "/placeholder.png"}
+          src={product.image_url}
           alt={product.name}
           className="product-image"
           width={300}

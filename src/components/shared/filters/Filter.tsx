@@ -22,6 +22,7 @@ const Filter: React.FC<FilterProps> = ({
   return (
     <div className="filter-bar">
       <select
+        className="bg-[var(--bg)]"
         value={category}
         onChange={(e) => onCategoryChange(e.target.value)}
       >

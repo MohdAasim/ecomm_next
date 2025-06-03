@@ -1,7 +1,7 @@
 "use server";
 import * as cartRepo from "../repositories/cartRepository";
 import { cookies } from "next/headers";
-import { authMiddleware } from "@/zserver/middlewares/authMiddleware";
+import { authMiddleware } from "@/server/middlewares/authMiddleware";
 import type { CartItem } from "@/types/Carttypes";
 
 /**

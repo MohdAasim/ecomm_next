@@ -1,8 +1,8 @@
 "use server";
 
 import * as userRepo from "../repositories/userRepository";
-import { sendEmail } from "../utils/mailer";
-import { generateToken } from "../utils/jwt.utils";
+import { sendEmail } from "@/utils/mailer";
+import { generateToken } from "@/utils/jwt.utils";
 import { UserInstance } from "../repositories/userRepository";
 
 /**

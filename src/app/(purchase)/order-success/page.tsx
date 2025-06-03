@@ -1,11 +1,9 @@
 import "./OrderSucsess.css";
 import Timer from "./Timer";
 
-const OrderSuccess: React.FC<React.HTMLAttributes<HTMLDivElement>> = (
-  props,
-) => {
+const OrderSuccess = () => {
   return (
-    <div className="order-success-container" {...props}>
+    <div className="order-success-container">
       <div className="order-success-icon">🎉</div>
       <h1 className="order-success-title">
         Hurray! Your order has been booked.
