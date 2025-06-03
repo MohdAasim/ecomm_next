@@ -4,7 +4,6 @@ import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adap
 
 export const authMiddleware = (cookie: ReadonlyRequestCookies) => {
   const authHeader = cookie.get("token")?.value;
-  console.log(authHeader, "authHeader in authMiddleware--------------");
 
   if (!authHeader) {
     return {

@@ -3,15 +3,14 @@ import * as cartRepo from "../repositories/cartRepository";
 import { cookies } from "next/headers";
 import { authMiddleware } from "@/server/middlewares/authMiddleware";
 import type { CartItem } from "@/types/Carttypes";
+import { validate } from "../middlewares/validateRequest";
 
 /**
  * Helper to get userId from cookies using authMiddleware.
  * Throws if not authenticated.
  */
 const getUserIdFromAuth = async () => {
-  console.log("befor cookie here - ---- -- - - --- -- - ");
   const cookieStore = await cookies();
-  console.log("in here - ---- -- - - --- -- - ");
 
   const authResult = authMiddleware(cookieStore);
 
@@ -22,6 +21,10 @@ const getUserIdFromAuth = async () => {
 export const addMultipleToCart = async (
   items: Array<{ productId: number; quantity: number }>,
 ): Promise<CartItem[]> => {
+  // Validate input
+  const { valid, message } = validate("addToCart", { items });
+  if (!valid) throw new Error(message);
+
   const userId = await getUserIdFromAuth();
   const results: CartItem[] = [];
   for (const { productId, quantity } of items) {
@@ -42,9 +45,7 @@ export const addMultipleToCart = async (
 };
 
 export const getCartItems = async (): Promise<CartItem[]> => {
-  console.log("Before Fetching cart items for userId:-------------------");
   const userId = await getUserIdFromAuth();
-  console.log("Fetching cart items for userId:-------------------", userId);
 
   const items = await cartRepo.findAllCartItems(userId);
   return items.map((item) => {
@@ -62,6 +63,10 @@ export const updateCartItem = async (
   productId: number,
   quantity: number,
 ): Promise<CartItem> => {
+  // Validate input
+  const { valid, message } = validate("updateCartItem", { quantity });
+  if (!valid) throw new Error(message);
+
   const userId = await getUserIdFromAuth();
   const item = await cartRepo.findCartItem(userId, productId);
   if (!item) throw new Error("Item not found in cart");
