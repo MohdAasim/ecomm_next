@@ -1,4 +1,4 @@
-import { getProducts } from "@/zserver/services/productService";
+import { getProducts } from "@/zserver/actions/productService";
 import ProductListingClient from "./ProductListingClient";
 import { Product } from "@/types/Product";
 import Link from "next/link";
@@ -52,7 +52,6 @@ export default async function ProductListing({ searchParams }: PageProps) {
       minPrice={minPrice}
       maxPrice={maxPrice}
     >
-      {" "}
       {products.length === 0 ? (
         <div>
           <ErrorMessage message={"No Product Found"} />{" "}

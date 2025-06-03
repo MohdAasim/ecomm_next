@@ -21,6 +21,8 @@ export const findUserByEmail = async (
 };
 
 export const createUser = async (email: string): Promise<UserInstance> => {
+  console.log("in create User");
+
   return (await User.create({ email })) as UserInstance;
 };
 

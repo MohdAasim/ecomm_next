@@ -1,7 +1,7 @@
+"use server";
 import * as productRepo from "../repositories/productRepository";
 import { Op } from "sequelize";
 import { ALLOWED_CATEGORIES } from "../utils/constants";
-import { syncDatabase } from "../config/database.config";
 
 /**
  * Get a paginated list of products with optional filters.
@@ -17,9 +17,6 @@ import { syncDatabase } from "../config/database.config";
  */
 /* eslint-disable */
 export const getProducts = async (queryParams: any): Promise<any> => {
-  await syncDatabase();
-  console.log(queryParams);
-
   const page = parseInt(queryParams.page as string) || 1;
   const limit = parseInt(queryParams.limit as string) || 10;
   const offset = (page - 1) * limit;
@@ -58,7 +55,6 @@ export const getProducts = async (queryParams: any): Promise<any> => {
     offset,
   );
 
-  console.log("Products fetched:", rows, "Total count:", count);
   return {
     totalItems: count,
     totalPages: Math.ceil(count / limit),

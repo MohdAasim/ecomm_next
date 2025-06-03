@@ -1,3 +1,4 @@
+"use server";
 import * as addressRepo from "../repositories/userAddressRepository";
 import {
   UserAddressAttributes,
@@ -74,3 +75,18 @@ export const deleteAddress = async (
   await addressRepo.deleteAddress(address);
   return { message: "Address deleted successfully" };
 };
+export async function handleCreateAddress(formData: FormData, userId: number) {
+  // "use server";
+  const street = formData.get("street") as string;
+  const city = formData.get("city") as string;
+  const state = formData.get("state") as string;
+  const postalCode = formData.get("postalCode") as string;
+  const country = formData.get("country") as string;
+  await createAddress(userId as number, {
+    street,
+    city,
+    state,
+    postalCode,
+    country,
+  });
+}

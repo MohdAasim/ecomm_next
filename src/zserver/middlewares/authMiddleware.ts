@@ -4,6 +4,7 @@ import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adap
 
 export const authMiddleware = (cookie: ReadonlyRequestCookies) => {
   const authHeader = cookie.get("token")?.value;
+  console.log(authHeader, "authHeader in authMiddleware--------------");
 
   if (!authHeader) {
     return {
@@ -12,14 +13,8 @@ export const authMiddleware = (cookie: ReadonlyRequestCookies) => {
     };
   }
 
-  const token = authHeader.split(" ")[1];
-
-  if (!token) {
-    return {
-      status: STATUS.UNAUTHORIZED,
-      message: "No token provided",
-    };
-  }
+  // Use the cookie value directly as the token
+  const token = authHeader;
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string);

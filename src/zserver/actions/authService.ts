@@ -1,3 +1,5 @@
+"use server";
+
 import * as userRepo from "../repositories/userRepository";
 import { sendEmail } from "../utils/mailer";
 import { generateToken } from "../utils/jwt.utils";
@@ -19,6 +21,8 @@ export const sendOTPService = async (
   email: string,
 ): Promise<{ message: string }> => {
   const otp = generateOTP();
+  console.log("in here ");
+
   const otpExpiresAt = new Date(Date.now() + 2 * 60 * 1000); // 2 minutes
 
   let user: UserInstance | null = await userRepo.findUserByEmail(email);

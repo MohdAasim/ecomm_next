@@ -12,17 +12,3 @@ export const sequelize = new Sequelize(
     logging: false,
   },
 );
-
-/**
- * Syncs all defined models to the DB.
- * Call this once at app startup to ensure tables exist.
- */
-export const syncDatabase = async () => {
-  try {
-    await sequelize.sync({ alter: true }); // alter:true updates tables to match models
-    console.log("Database synchronized successfully.");
-  } catch (error) {
-    console.error("Database synchronization failed:", error);
-    throw error;
-  }
-};

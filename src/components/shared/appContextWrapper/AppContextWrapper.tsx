@@ -13,6 +13,9 @@ const AppContextWrapper: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     if (isAuthenticated && !hasSynced.current) {
+      console.log(
+        "Calling syncCartToBackend------------------------------------------------",
+      );
       syncCartToBackend();
       hasSynced.current = true;
     }

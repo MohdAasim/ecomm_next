@@ -1,21 +1,9 @@
-"use client";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import "./OrderSucsess.css";
+import Timer from "./Timer";
 
 const OrderSuccess: React.FC<React.HTMLAttributes<HTMLDivElement>> = (
   props,
 ) => {
-  const router = useRouter();
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      router.push("/");
-    }, 3000); // 3 seconds
-
-    return () => clearTimeout(timer);
-  }, [router]);
-
   return (
     <div className="order-success-container" {...props}>
       <div className="order-success-icon">🎉</div>
@@ -25,6 +13,7 @@ const OrderSuccess: React.FC<React.HTMLAttributes<HTMLDivElement>> = (
       <p className="order-success-message">
         You will be redirected to the home page shortly...
       </p>
+      <Timer />
     </div>
   );
 };

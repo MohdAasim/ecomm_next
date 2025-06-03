@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "../../context/AuthContext";
 import { useCart } from "../../context/CartContext";
+import { useHasMounted } from "./HeaderClient";
 import "./Header.css";
 
 const Header: React.FC<React.HTMLAttributes<HTMLElement>> = (props) => {
@@ -12,6 +13,7 @@ const Header: React.FC<React.HTMLAttributes<HTMLElement>> = (props) => {
   const router = useRouter();
   const pathname = usePathname();
   const { cartItems } = useCart();
+  const hasMounted = useHasMounted();
 
   const handleToggle = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -54,15 +56,17 @@ const Header: React.FC<React.HTMLAttributes<HTMLElement>> = (props) => {
           >
             Cart ({cartItems?.length ?? 0})
           </Link>
-          {isAuthenticated ? (
-            <a className="nav-link" onClick={handleSignOut}>
-              Sign Out
-            </a>
-          ) : (
-            <a className="nav-link" onClick={handleSignInRedirect}>
-              Sign In
-            </a>
-          )}
+          {hasMounted ? (
+            isAuthenticated ? (
+              <a className="nav-link" onClick={handleSignOut}>
+                Sign Out
+              </a>
+            ) : (
+              <a className="nav-link" onClick={handleSignInRedirect}>
+                Sign In
+              </a>
+            )
+          ) : null}
         </nav>
       </div>
     </header>

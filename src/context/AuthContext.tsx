@@ -27,6 +27,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const login = (newToken: string, newUserId: number) => {
     Cookies.set("token", newToken, { expires: 2 });
+    Cookies.set("userId", String(newUserId), { expires: 2 }); // <-- Add this line
     setToken(newToken);
     setUserId(newUserId);
     router.push(from); // Redirect to the original page or home
