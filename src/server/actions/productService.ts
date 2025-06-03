@@ -2,6 +2,8 @@
 import * as productRepo from "../repositories/productRepository";
 import { Op } from "sequelize";
 import { ALLOWED_CATEGORIES } from "@/utils/constants";
+import { validate } from "../middlewares/validateRequest";
+import { logger } from "@/utils/logger";
 
 /**
  * Get a paginated list of products with optional filters.
@@ -73,15 +75,26 @@ export const getProducts = async (queryParams: any): Promise<any> => {
  * @throws {Error} If required fields are missing or category is invalid.
  */
 export const createProduct = async (productData: any): Promise<any> => {
+  // Validate input
+  const { valid, message } = validate("createProduct", productData);
+  if (!valid) {
+    logger.warn(`Product validation failed: ${message}`);
+    const error: any = new Error(message);
+    error.statusCode = 400;
+    throw error;
+  }
+
   const { name, price, category } = productData;
 
   if (!name || !price) {
+    logger.warn("Product creation failed: Name and price are required.");
     const error: any = new Error("Name and price are required.");
     error.statusCode = 400;
     throw error;
   }
 
   if (category && !ALLOWED_CATEGORIES.includes(category.toLowerCase())) {
+    logger.warn(`Invalid category: ${category}`);
     const error: any = new Error(
       `Invalid category. Allowed categories are: ${ALLOWED_CATEGORIES.join(", ")}.`,
     );
@@ -89,6 +102,7 @@ export const createProduct = async (productData: any): Promise<any> => {
     throw error;
   }
 
+  logger.info(`Creating product: ${name}, category: ${category}`);
   return await productRepo.createProduct(productData);
 };
 

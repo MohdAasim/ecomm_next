@@ -1,4 +1,5 @@
 import Joi, { Schema } from "joi";
+import { logger } from "@/utils/logger"; // Add this import
 
 // Define schemas for each route/action
 const schemas: Record<string, Schema> = {
@@ -65,11 +66,19 @@ export function validate(
   data: any,
 ): { valid: boolean; value?: any; message?: string } {
   const schema = schemas[schemaName];
-  if (!schema) return { valid: true, value: data };
+  if (!schema) {
+    logger.warn(`No validation schema found for: ${schemaName}`);
+    return { valid: true, value: data };
+  }
 
   const { error } = schema.validate(data);
   if (error) {
+    logger.warn(
+      `Validation failed for ${schemaName}: ${error.details[0].message}`,
+      { data },
+    );
     return { valid: false, message: error.details[0].message };
   }
+  logger.info(`Validation succeeded for ${schemaName}`, { data });
   return { valid: true };
 }

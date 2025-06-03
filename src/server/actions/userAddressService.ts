@@ -5,6 +5,8 @@ import {
   UserAddressInstance,
   UserInstance,
 } from "../repositories/userAddressRepository";
+import { validate } from "../middlewares/validateRequest";
+import { logger } from "@/utils/logger";
 
 /**
  * Create a new address for a user.
@@ -15,14 +17,24 @@ import {
  */
 export const createAddress = async (
   userId: number,
-  addressData: Omit<
-    UserAddressAttributes,
-    "id" | "userId" | "createdAt" | "updatedAt"
-  >,
+  addressData: UserAddressAttributes,
 ): Promise<UserAddressInstance> => {
-  const user: UserInstance | null = await addressRepo.findUserById(userId);
-  if (!user) throw new Error("User not found");
+  const { valid, message } = validate("createAddress", {
+    userId,
+    ...addressData,
+  });
+  if (!valid) {
+    logger.warn(`Address validation failed for user ${userId}: ${message}`);
+    throw new Error(message);
+  }
 
+  const user: UserInstance | null = await addressRepo.findUserById(userId);
+  if (!user) {
+    logger.error(`User not found: ${userId}`);
+    throw new Error("User not found");
+  }
+
+  logger.info(`Creating address for user ${userId}`);
   return await addressRepo.createAddress(userId, addressData);
 };
 
@@ -50,6 +62,10 @@ export const updateAddress = async (
   userId: number,
   newData: Partial<UserAddressAttributes>,
 ): Promise<UserAddressInstance> => {
+  // Validate input
+  const { valid, message } = validate("updateAddress", { userId, ...newData });
+  if (!valid) throw new Error(message);
+
   const address: UserAddressInstance | null =
     await addressRepo.findAddressByIdAndUser(addressId, userId);
   if (!address) throw new Error("Address not found");
@@ -68,6 +84,10 @@ export const deleteAddress = async (
   addressId: number,
   userId: number,
 ): Promise<{ message: string }> => {
+  // Validate input
+  const { valid, message } = validate("deleteAddress", { userId });
+  if (!valid) throw new Error(message);
+
   const address: UserAddressInstance | null =
     await addressRepo.findAddressByIdAndUser(addressId, userId);
   if (!address) throw new Error("Address not found");
