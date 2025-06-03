@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { STATUS } from "../utils/statusCodes";
+import { STATUS } from "@/utils/statusCodes";
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
 export const authMiddleware = (cookie: ReadonlyRequestCookies) => {

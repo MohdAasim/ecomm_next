@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import * as cartService from "@/zserver/actions/cartService";
+import * as cartService from "@/server/actions/cartService";
 
 export async function GET() {
   try {
     const items = await cartService.getCartItems();
     return NextResponse.json(items);
-  } catch (err: unknown) {
+  } catch (err) {
     const message = err instanceof Error ? err.message : "Unauthorized";
     return NextResponse.json({ error: message }, { status: 401 });
   }
@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const result = await cartService.addMultipleToCart(body.items);
     return NextResponse.json(result);
-  } catch (err: unknown) {
+  } catch (err) {
     const message = err instanceof Error ? err.message : "Unauthorized";
     return NextResponse.json({ error: message }, { status: 401 });
   }
@@ -45,7 +45,7 @@ export async function DELETE(req: NextRequest) {
       await cartService.clearCart();
     }
     return NextResponse.json({ success: true });
-  } catch (err: unknown) {
+  } catch (err) {
     const message = err instanceof Error ? err.message : "Unauthorized";
     return NextResponse.json({ error: message }, { status: 401 });
   }

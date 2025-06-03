@@ -12,13 +12,12 @@ function Operation({ product }: { product: Product }) {
   const decrement = () => setQuantity((q) => (q > 1 ? q - 1 : 1));
   const handleAddToCart = () => {
     if (product && product.id != null) {
-      addToCart({ productId: product.id, quantity, product });
+      addToCart({ productId: product.id, quantity, Product: product });
       toast.success(`${product.name} added to cart!`);
     }
   };
   return (
     <>
-      {" "}
       <div className="quantity-control">
         <button onClick={decrement}>-</button>
         <span>{quantity}</span>

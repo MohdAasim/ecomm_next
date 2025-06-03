@@ -1,6 +1,5 @@
 node_modules
 .next
 out
-.env*
 Dockerfile
 docker-compose.yml

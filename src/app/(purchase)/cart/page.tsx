@@ -1,6 +1,6 @@
 "use client";
-import { useCart } from "../../context/CartContext";
-import { useAuth } from "../../context/AuthContext";
+import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 import "./CartPage.css";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";

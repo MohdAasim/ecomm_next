@@ -1,3 +1,10 @@
+export const ALLOWED_CATEGORIES = [
+  "electronics",
+  "fashion",
+  "books",
+  "appliances",
+  "furniture",
+];
 export const CATEGORY_FILTER = [
   { label: "All Categories", value: "" },
   { label: "Electronics", value: "electronics" },
