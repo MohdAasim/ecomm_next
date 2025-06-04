@@ -4,6 +4,8 @@ import { Op } from "sequelize";
 import { ALLOWED_CATEGORIES } from "@/utils/constants";
 import { validate } from "../middlewares/validateRequest";
 import { logger } from "@/utils/logger";
+import { withErrorBoundary } from "@/utils/actionWrapper";
+import { HttpError } from "@/utils/error/HttpsError";
 
 /**
  * Get a paginated list of products with optional filters.
@@ -19,50 +21,52 @@ import { logger } from "@/utils/logger";
  */
 /* eslint-disable */
 export const getProducts = async (queryParams: any): Promise<any> => {
-  const page = parseInt(queryParams.page as string) || 1;
-  const limit = parseInt(queryParams.limit as string) || 10;
-  const offset = (page - 1) * limit;
+  return await withErrorBoundary(async () => {
+    const page = parseInt(queryParams.page as string) || 1;
+    const limit = parseInt(queryParams.limit as string) || 10;
+    const offset = (page - 1) * limit;
 
-  const { search, category, minPrice, maxPrice, rating } = queryParams;
+    const { search, category, minPrice, maxPrice, rating } = queryParams;
 
-  // Use Record<string, any> for dynamic keys
-  const where: Record<string | symbol, any> = {};
+    // Use Record<string, any> for dynamic keys
+    const where: Record<string | symbol, any> = {};
 
-  if (search) {
-    where[Op.or] = [
-      { name: { [Op.like]: `%${search}%` } },
-      { description: { [Op.like]: `%${search}%` } },
-    ];
-  }
+    if (search) {
+      where[Op.or] = [
+        { name: { [Op.like]: `%${search}%` } },
+        { description: { [Op.like]: `%${search}%` } },
+      ];
+    }
 
-  if (category) {
-    where.category = category;
-  }
+    if (category) {
+      where.category = category;
+    }
 
-  if (minPrice !== undefined && maxPrice !== undefined) {
-    where.price = { [Op.between]: [minPrice, maxPrice] };
-  } else if (minPrice !== undefined) {
-    where.price = { [Op.gte]: minPrice };
-  } else if (maxPrice !== undefined) {
-    where.price = { [Op.lte]: maxPrice };
-  }
+    if (minPrice !== undefined && maxPrice !== undefined) {
+      where.price = { [Op.between]: [minPrice, maxPrice] };
+    } else if (minPrice !== undefined) {
+      where.price = { [Op.gte]: minPrice };
+    } else if (maxPrice !== undefined) {
+      where.price = { [Op.lte]: maxPrice };
+    }
 
-  if (rating !== undefined) {
-    where.rating = { [Op.gte]: rating };
-  }
+    if (rating !== undefined) {
+      where.rating = { [Op.gte]: rating };
+    }
 
-  const { count, rows } = await productRepo.findAndCountProducts(
-    where,
-    limit,
-    offset,
-  );
+    const { count, rows } = await productRepo.findAndCountProducts(
+      where,
+      limit,
+      offset,
+    );
 
-  return {
-    totalItems: count,
-    totalPages: Math.ceil(count / limit),
-    currentPage: page,
-    products: rows,
-  };
+    return {
+      totalItems: count,
+      totalPages: Math.ceil(count / limit),
+      currentPage: page,
+      products: rows,
+    };
+  });
 };
 
 /**
@@ -75,35 +79,32 @@ export const getProducts = async (queryParams: any): Promise<any> => {
  * @throws {Error} If required fields are missing or category is invalid.
  */
 export const createProduct = async (productData: any): Promise<any> => {
-  // Validate input
-  const { valid, message } = validate("createProduct", productData);
-  if (!valid) {
-    logger.warn(`Product validation failed: ${message}`);
-    const error: any = new Error(message);
-    error.statusCode = 400;
-    throw error;
-  }
+  return await withErrorBoundary(async () => {
+    // Validate input
+    const { valid, message } = validate("createProduct", productData);
+    if (!valid) {
+      logger.warn(`Product validation failed: ${message}`);
+      throw new HttpError(message as string, 400);
+    }
 
-  const { name, price, category } = productData;
+    const { name, price, category } = productData;
 
-  if (!name || !price) {
-    logger.warn("Product creation failed: Name and price are required.");
-    const error: any = new Error("Name and price are required.");
-    error.statusCode = 400;
-    throw error;
-  }
+    if (!name || !price) {
+      logger.warn("Product creation failed: Name and price are required.");
+      throw new HttpError("Name and price are required.", 400);
+    }
 
-  if (category && !ALLOWED_CATEGORIES.includes(category.toLowerCase())) {
-    logger.warn(`Invalid category: ${category}`);
-    const error: any = new Error(
-      `Invalid category. Allowed categories are: ${ALLOWED_CATEGORIES.join(", ")}.`,
-    );
-    error.statusCode = 400;
-    throw error;
-  }
+    if (category && !ALLOWED_CATEGORIES.includes(category.toLowerCase())) {
+      logger.warn(`Invalid category: ${category}`);
+      throw new HttpError(
+        `Invalid category. Allowed categories are: ${ALLOWED_CATEGORIES.join(", ")}.`,
+        400,
+      );
+    }
 
-  logger.info(`Creating product: ${name}, category: ${category}`);
-  return await productRepo.createProduct(productData);
+    logger.info(`Creating product: ${name}, category: ${category}`);
+    return await productRepo.createProduct(productData);
+  });
 };
 
 /**
@@ -113,12 +114,12 @@ export const createProduct = async (productData: any): Promise<any> => {
  * @throws {Error} If product is not found.
  */
 export const getProductById = async (id: number | string): Promise<any> => {
-  const product = await productRepo.findProductById(Number(id));
-  if (!product) {
-    const error: any = new Error("Product not found");
-    error.statusCode = 404;
-    throw error;
-  }
+  return await withErrorBoundary(async () => {
+    const product = await productRepo.findProductById(Number(id));
+    if (!product) {
+      throw new HttpError("Product not found", 404);
+    }
 
-  return product;
+    return product;
+  });
 };
