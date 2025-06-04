@@ -3,41 +3,37 @@ services:
     container_name: nextjs-app
     build:
       context: .
-      dockerfile: ${DOCKERFILE:-Dockerfile.dev}
+      dockerfile: Dockerfile.dev
     volumes:
       - .:/app
+      - /app/node_modules
+      - /app/.next
     ports:
       - "3000:3000"
     env_file:
-      - .env
+      - .env.production
     environment:
-      - NODE_ENV=${NODE_ENV:-development}
       - CHOKIDAR_USEPOLLING=true
       - NEXT_TELEMETRY_DISABLED=1
+      - HOSTNAME=0.0.0.0
     depends_on:
       db:
         condition: service_healthy
 
   db:
     image: mysql:8.0
+    container_name: mysql-db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ecommerce_app
     ports:
       - "3306:3306"
     volumes:
       - db-data:/var/lib/mysql
     healthcheck:
       test:
-        [
-          "CMD",
-          "mysqladmin",
-          "ping",
-          "--host=localhost",
-          "--user=root",
-          "--password=${DB_PASSWORD}",
-        ]
+        ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
       interval: 30s
       retries: 10
       start_period: 60s
@@ -45,3 +41,4 @@ services:
 
 volumes:
   db-data:
+    name: ecomm_next_db_persistent
