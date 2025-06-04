@@ -8,6 +8,8 @@
     "docker": "NODE_ENV=docker next dev",
     "start": "next start",
     "lint": "next lint",
+    "lint:css": "stylelint \"**/*.{css,scss}\"",
+    "lint:css:fix": "stylelint \"**/*.{css,scss}\" --fix",
     "test": "jest",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
