@@ -1,22 +1,29 @@
-"use client"; // Error boundaries must be Client Components
+"use client";
 
 import { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-export default function Error({
+export default function ErrorPage({
   error,
   reset,
 }: {
-  error: Error & { digest?: string };
+  error: Error;
   reset: () => void;
 }) {
-  useEffect(() => {}, [error]);
+  const searchParams = useSearchParams();
+  const message =
+    searchParams.get("message") || error.message || "An unknown error occurred";
+
+  useEffect(() => {
+    console.error("[App Error]", error);
+  }, [error]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
       <div className="max-w-md w-full text-center">
         <h2 className="text-3xl font-bold text-red-600 dark:text-red-400 mb-4">
-          Something went wrong!
+          {message ? message : "Something went wrong!"}
         </h2>
         <p className="text-gray-700 dark:text-gray-300 mb-6">
           An unexpected error has occurred. Please try again.
