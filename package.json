@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "tsc -b && next build",
+    "docker": "NODE_ENV=docker next dev",
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
