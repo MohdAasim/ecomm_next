@@ -58,13 +58,13 @@ const Header: React.FC<React.HTMLAttributes<HTMLElement>> = (props) => {
           </Link>
           {hasMounted ? (
             isAuthenticated ? (
-              <a className="nav-link" onClick={handleSignOut}>
+              <span className="nav-link" onClick={handleSignOut}>
                 Sign Out
-              </a>
+              </span>
             ) : (
-              <a className="nav-link" onClick={handleSignInRedirect}>
+              <span className="nav-link" onClick={handleSignInRedirect}>
                 Sign In
-              </a>
+              </span>
             )
           ) : null}
         </nav>

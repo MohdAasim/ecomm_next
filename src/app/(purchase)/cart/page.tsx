@@ -1,31 +1,15 @@
 "use client";
-import { useCart } from "@/context/CartContext";
-import { useAuth } from "@/context/AuthContext";
 import "./CartPage.css";
-import { toast } from "react-toastify";
-import Swal from "sweetalert2";
-import { useRouter } from "next/navigation";
+import { useCartPage } from "@/hooks/useCartPage";
 
 const CartPage = () => {
-  const { cartItems, updateQuantity, removeFromCart, clearCart } = useCart();
-  const { isAuthenticated } = useAuth();
-  const navigate = useRouter();
-
-  const totalPrice = cartItems.reduce(
-    (sum, item) => sum + Number(item.Product?.price || 0) * item.quantity,
-    0,
-  );
-
-  const handleCheckout = () => {
-    if (!isAuthenticated) {
-      navigate.push("/signin");
-      return;
-    }
-    navigate.push(`/checkout?totalPrice=${totalPrice}`);
-  };
-
-  // Defensive fallback
-  const safeCartItems = Array.isArray(cartItems) ? cartItems : [];
+  const {
+    safeCartItems,
+    updateQuantity,
+    handleCheckout,
+    handleRemoveItem,
+    handleClearCart,
+  } = useCartPage();
 
   return (
     <div className="cart-container">
@@ -66,22 +50,7 @@ const CartPage = () => {
 
                   <button
                     className="cart-remove"
-                    onClick={async () => {
-                      const result = await Swal.fire({
-                        title: "Remove from cart?",
-                        text: "Are you sure you want to remove this item?",
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#d33",
-                        cancelButtonColor: "#3085d6",
-                        confirmButtonText: "Yes, remove it!",
-                      });
-
-                      if (result.isConfirmed) {
-                        removeFromCart(item.productId);
-                        toast.info("Item removed from cart");
-                      }
-                    }}
+                    onClick={() => handleRemoveItem(item.productId)}
                   >
                     Remove
                   </button>
@@ -90,25 +59,7 @@ const CartPage = () => {
             ))}
           </ul>
           <div className="cart-actions">
-            <button
-              className="cart-clear"
-              onClick={async () => {
-                const result = await Swal.fire({
-                  title: "Clear cart?",
-                  text: "Are you sure you want to clear the entire cart?",
-                  icon: "warning",
-                  showCancelButton: true,
-                  confirmButtonColor: "#d33",
-                  cancelButtonColor: "#3085d6",
-                  confirmButtonText: "Yes, clear it!",
-                });
-
-                if (result.isConfirmed) {
-                  clearCart();
-                  toast.info("Cart cleared");
-                }
-              }}
-            >
+            <button className="cart-clear" onClick={handleClearCart}>
               Clear Cart
             </button>
 

@@ -7,6 +7,8 @@ import {
 } from "../repositories/userAddressRepository";
 import { validate } from "../middlewares/validateRequest";
 import { logger } from "@/utils/logger";
+import { withErrorBoundary } from "@/utils/actionWrapper";
+import { HttpError } from "@/utils/error/HttpsError";
 
 /**
  * Create a new address for a user.
@@ -19,23 +21,25 @@ export const createAddress = async (
   userId: number,
   addressData: UserAddressAttributes,
 ): Promise<UserAddressInstance> => {
-  const { valid, message } = validate("createAddress", {
-    userId,
-    ...addressData,
+  return await withErrorBoundary(async () => {
+    const { valid, message } = validate("createAddress", {
+      userId,
+      ...addressData,
+    });
+    if (!valid) {
+      logger.warn(`Address validation failed for user ${userId}: ${message}`);
+      throw new HttpError(message as string, 400);
+    }
+
+    const user: UserInstance | null = await addressRepo.findUserById(userId);
+    if (!user) {
+      logger.error(`User not found: ${userId}`);
+      throw new HttpError("User not found", 404);
+    }
+
+    logger.info(`Creating address for user ${userId}`);
+    return await addressRepo.createAddress(userId, addressData);
   });
-  if (!valid) {
-    logger.warn(`Address validation failed for user ${userId}: ${message}`);
-    throw new Error(message);
-  }
-
-  const user: UserInstance | null = await addressRepo.findUserById(userId);
-  if (!user) {
-    logger.error(`User not found: ${userId}`);
-    throw new Error("User not found");
-  }
-
-  logger.info(`Creating address for user ${userId}`);
-  return await addressRepo.createAddress(userId, addressData);
 };
 
 /**
@@ -46,7 +50,9 @@ export const createAddress = async (
 export const getAddressesByUser = async (
   userId: number,
 ): Promise<UserAddressInstance[]> => {
-  return await addressRepo.findAddressesByUser(userId);
+  return await withErrorBoundary(async () => {
+    return await addressRepo.findAddressesByUser(userId);
+  });
 };
 
 /**
@@ -62,15 +68,20 @@ export const updateAddress = async (
   userId: number,
   newData: Partial<UserAddressAttributes>,
 ): Promise<UserAddressInstance> => {
-  // Validate input
-  const { valid, message } = validate("updateAddress", { userId, ...newData });
-  if (!valid) throw new Error(message);
+  return await withErrorBoundary(async () => {
+    // Validate input
+    const { valid, message } = validate("updateAddress", {
+      userId,
+      ...newData,
+    });
+    if (!valid) throw new HttpError(message as string, 400);
 
-  const address: UserAddressInstance | null =
-    await addressRepo.findAddressByIdAndUser(addressId, userId);
-  if (!address) throw new Error("Address not found");
+    const address: UserAddressInstance | null =
+      await addressRepo.findAddressByIdAndUser(addressId, userId);
+    if (!address) throw new HttpError("Address not found", 404);
 
-  return await addressRepo.updateAddress(address, newData);
+    return await addressRepo.updateAddress(address, newData);
+  });
 };
 
 /**
@@ -84,29 +95,34 @@ export const deleteAddress = async (
   addressId: number,
   userId: number,
 ): Promise<{ message: string }> => {
-  // Validate input
-  const { valid, message } = validate("deleteAddress", { userId });
-  if (!valid) throw new Error(message);
+  return await withErrorBoundary(async () => {
+    // Validate input
+    const { valid, message } = validate("deleteAddress", { userId });
+    if (!valid) throw new HttpError(message as string, 400);
 
-  const address: UserAddressInstance | null =
-    await addressRepo.findAddressByIdAndUser(addressId, userId);
-  if (!address) throw new Error("Address not found");
+    const address: UserAddressInstance | null =
+      await addressRepo.findAddressByIdAndUser(addressId, userId);
+    if (!address) throw new HttpError("Address not found", 404);
 
-  await addressRepo.deleteAddress(address);
-  return { message: "Address deleted successfully" };
+    await addressRepo.deleteAddress(address);
+    return { message: "Address deleted successfully" };
+  });
 };
+
 export async function handleCreateAddress(formData: FormData, userId: number) {
-  // "use server";
-  const street = formData.get("street") as string;
-  const city = formData.get("city") as string;
-  const state = formData.get("state") as string;
-  const postalCode = formData.get("postalCode") as string;
-  const country = formData.get("country") as string;
-  await createAddress(userId as number, {
-    street,
-    city,
-    state,
-    postalCode,
-    country,
+  return await withErrorBoundary(async () => {
+    // "use server";
+    const street = formData.get("street") as string;
+    const city = formData.get("city") as string;
+    const state = formData.get("state") as string;
+    const postalCode = formData.get("postalCode") as string;
+    const country = formData.get("country") as string;
+    await createAddress(userId as number, {
+      street,
+      city,
+      state,
+      postalCode,
+      country,
+    });
   });
 }
