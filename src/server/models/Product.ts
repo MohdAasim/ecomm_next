@@ -1,8 +1,8 @@
-import { DataTypes } from "sequelize";
-import { sequelize } from "../config/database.config";
+import { DataTypes } from 'sequelize';
+import { sequelize } from '../config/database.config';
 
 export const Product = sequelize.define(
-  "Product",
+  'Product',
   {
     name: {
       type: DataTypes.STRING,
@@ -19,9 +19,9 @@ export const Product = sequelize.define(
   {
     timestamps: true,
     indexes: [
-      { fields: ["name"] }, // Index for faster search by name
-      { fields: ["category"] }, // Index for filtering by category
-      { fields: ["price"] }, // Index for sorting/filtering by price
+      { fields: ['name'] }, // Index for faster search by name
+      { fields: ['category'] }, // Index for filtering by category
+      { fields: ['price'] }, // Index for sorting/filtering by price
     ],
-  },
+  }
 );

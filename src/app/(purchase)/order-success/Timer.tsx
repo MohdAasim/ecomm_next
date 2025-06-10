@@ -1,14 +1,14 @@
-"use client";
-import { useRouter } from "next/navigation";
+'use client';
+import { useRouter } from 'next/navigation';
 
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 
 function Timer() {
   const router = useRouter();
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      router.push("/");
+      router.push('/');
     }, 3000); // 3 seconds
 
     return () => clearTimeout(timer);

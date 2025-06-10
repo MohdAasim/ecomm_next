@@ -1,5 +1,5 @@
-import "./OrderSucsess.css";
-import Timer from "./Timer";
+import './OrderSucsess.css';
+import Timer from './Timer';
 
 const OrderSuccess = () => {
   return (

@@ -1,5 +1,5 @@
-import ShimmerUi from "@/components/ShimmerUi";
-import "./ProductListing.css";
+import ShimmerUi from '@/components/ShimmerUi';
+import './ProductListing.css';
 
 const loading = () => {
   return (

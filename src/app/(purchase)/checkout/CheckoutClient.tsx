@@ -1,9 +1,9 @@
-"use client";
-import React from "react";
-import AddressForm from "../../../components/shared/addressForm/AddressForm";
-import "./CheckoutPage.css";
-import { Address } from "@/types/Address";
-import { useCheckout } from "@/hooks/useCheckout";
+'use client';
+import React from 'react';
+import AddressForm from '../../../components/shared/addressForm/AddressForm';
+import './CheckoutPage.css';
+import { Address } from '@/types/Address';
+import { useCheckout } from '@/hooks/useCheckout';
 
 interface CheckoutClientProps {
   addresses: Address[];
@@ -31,7 +31,7 @@ const CheckoutClient: React.FC<CheckoutClientProps> = ({
       <h2 className="checkout-title">Checkout</h2>
 
       {addresses.length > 0 && (
-        <div className="address-section">
+        <section className="address-section">
           <h3 className="section-title">Select Saved Address:</h3>
           <div className="address-list">
             {addresses.map((addr) => (
@@ -44,15 +44,15 @@ const CheckoutClient: React.FC<CheckoutClientProps> = ({
                   onChange={() => setSelectedAddressId(addr.id)}
                   className="radio-input"
                 />
-                {addr.street}, {addr.city}, {addr.state}, {addr.postalCode},{" "}
+                {addr.street}, {addr.city}, {addr.state}, {addr.postalCode},{' '}
                 {addr.country}
               </label>
             ))}
           </div>
-        </div>
+        </section>
       )}
 
-      <div className="new-address-section">
+      <section className="new-address-section">
         <h3 className="section-title">Enter New Address:</h3>
         <AddressForm address={newAddress} onChange={handleNewAddressChange} />
         <label className="checkbox-label">
@@ -64,11 +64,11 @@ const CheckoutClient: React.FC<CheckoutClientProps> = ({
           />
           Save this address for future delivery
         </label>
-      </div>
+      </section>
 
-      <div className="total-amount">
+      <article className="total-amount">
         Total: <span className="price">₹{totalPrice}</span>
-      </div>
+      </article>
 
       <button className="checkout-button" onClick={handleBookOrder}>
         Proceed to Book (COD)

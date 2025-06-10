@@ -1,9 +1,9 @@
-import multer from "multer";
-import path from "path";
-import fs from "fs";
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
 
 // Ensure uploads directory exists
-const uploadDir = path.join(__dirname, "../public/uploads");
+const uploadDir = path.join(__dirname, '../public/uploads');
 //Use of fs.existsSync and fs.mkdirSync is fine and even preferable in this context, as it simplifies setup code and doesn’t affect runtime performance of your app.
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });

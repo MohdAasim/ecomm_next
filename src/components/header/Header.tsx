@@ -1,11 +1,11 @@
-"use client";
-import React, { useState } from "react";
-import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
-import { useAuth } from "../../context/AuthContext";
-import { useCart } from "../../context/CartContext";
-import { useHasMounted } from "./HeaderClient";
-import "./Header.css";
+'use client';
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { useRouter, usePathname } from 'next/navigation';
+import { useAuth } from '../../context/AuthContext';
+import { useCart } from '../../context/CartContext';
+import { useHasMounted } from './HeaderClient';
+import './Header.css';
 
 const Header: React.FC<React.HTMLAttributes<HTMLElement>> = (props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -41,7 +41,7 @@ const Header: React.FC<React.HTMLAttributes<HTMLElement>> = (props) => {
           ☰
         </button>
 
-        <nav className={`nav-links ${isMenuOpen ? "open" : ""}`}>
+        <nav className={`nav-links ${isMenuOpen ? 'open' : ''}`}>
           <Link
             href="/about"
             className="nav-link"

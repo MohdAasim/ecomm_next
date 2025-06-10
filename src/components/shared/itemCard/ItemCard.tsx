@@ -1,7 +1,7 @@
-import React from "react";
-import type { Product } from "../../../types/Product";
-import "./Itemcard.css";
-import Image from "next/image";
+import React from 'react';
+import type { Product } from '../../../types/Product';
+import './Itemcard.css';
+import Image from 'next/image';
 
 interface ItemCardProps {
   data: Product;
@@ -12,10 +12,10 @@ const ItemCard: React.FC<ItemCardProps> = ({ data }) => {
   const imageUrl = data.image_url;
 
   return (
-    <div className="card">
+    <article className="card">
       <Image
         className="img_card"
-        alt="product-img"
+        alt={data.name}
         src={imageUrl as string}
         width={200}
         height={200}
@@ -24,7 +24,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ data }) => {
       <h2>{data.name}</h2>
       <p>₹{data.price}</p>
       <p>Category: {data.category}</p>
-    </div>
+    </article>
   );
 };
 

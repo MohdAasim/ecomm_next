@@ -1,6 +1,6 @@
-"use client";
-import React, { useState } from "react";
-import "./AddressForm.css";
+'use client';
+import React, { useState } from 'react';
+import './AddressForm.css';
 
 type AddressFormData = {
   street: string;
@@ -20,15 +20,15 @@ const AddressForm: React.FC<AddressFormProps> = ({ address, onChange }) => {
 
   const validate = () => {
     const newErrors: { [key: string]: string } = {};
-    if (!address.street.trim()) newErrors.street = "Street is required";
-    if (!address.city.trim()) newErrors.city = "City is required";
-    if (!address.state.trim()) newErrors.state = "State is required";
+    if (!address.street.trim()) newErrors.street = 'Street is required';
+    if (!address.city.trim()) newErrors.city = 'City is required';
+    if (!address.state.trim()) newErrors.state = 'State is required';
     if (!address.postalCode.trim()) {
-      newErrors.postalCode = "Postal Code is required";
+      newErrors.postalCode = 'Postal Code is required';
     } else if (!/^\d+$/.test(address.postalCode)) {
-      newErrors.postalCode = "Postal Code must be numeric";
+      newErrors.postalCode = 'Postal Code must be numeric';
     }
-    if (!address.country.trim()) newErrors.country = "Country is required";
+    if (!address.country.trim()) newErrors.country = 'Country is required';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -45,24 +45,48 @@ const AddressForm: React.FC<AddressFormProps> = ({ address, onChange }) => {
         value={address.street}
         onChange={onChange}
         onBlur={handleBlur}
+        aria-label="Street address"
+        aria-describedby={errors.street ? 'street-error' : undefined}
+        aria-invalid={!!errors.street}
       />
-      {errors.street && <span className="error">{errors.street}</span>}
+      {errors.street && (
+        <span id="street-error" className="error" role="alert">
+          {errors.street}
+        </span>
+      )}
+
       <input
         placeholder="City"
         name="city"
         value={address.city}
         onChange={onChange}
         onBlur={handleBlur}
+        aria-label="City"
+        aria-describedby={errors.city ? 'city-error' : undefined}
+        aria-invalid={!!errors.city}
       />
-      {errors.city && <span className="error">{errors.city}</span>}
+      {errors.city && (
+        <span id="city-error" className="error" role="alert">
+          {errors.city}
+        </span>
+      )}
+
       <input
         placeholder="State"
         name="state"
         value={address.state}
         onChange={onChange}
         onBlur={handleBlur}
+        aria-label="State or province"
+        aria-describedby={errors.state ? 'state-error' : undefined}
+        aria-invalid={!!errors.state}
       />
-      {errors.state && <span className="error">{errors.state}</span>}
+      {errors.state && (
+        <span id="state-error" className="error" role="alert">
+          {errors.state}
+        </span>
+      )}
+
       <input
         placeholder="Postal Code"
         name="postalCode"
@@ -70,16 +94,31 @@ const AddressForm: React.FC<AddressFormProps> = ({ address, onChange }) => {
         onChange={onChange}
         onBlur={handleBlur}
         inputMode="numeric"
+        aria-label="Postal code or ZIP code"
+        aria-describedby={errors.postalCode ? 'postal-error' : undefined}
+        aria-invalid={!!errors.postalCode}
       />
-      {errors.postalCode && <span className="error">{errors.postalCode}</span>}
+      {errors.postalCode && (
+        <span id="postal-error" className="error" role="alert">
+          {errors.postalCode}
+        </span>
+      )}
+
       <input
         placeholder="Country"
         name="country"
         value={address.country}
         onChange={onChange}
         onBlur={handleBlur}
+        aria-label="Country"
+        aria-describedby={errors.country ? 'country-error' : undefined}
+        aria-invalid={!!errors.country}
       />
-      {errors.country && <span className="error">{errors.country}</span>}
+      {errors.country && (
+        <span id="country-error" className="error" role="alert">
+          {errors.country}
+        </span>
+      )}
     </div>
   );
 };

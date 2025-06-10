@@ -1,5 +1,5 @@
-import { Dialect, Sequelize } from "sequelize";
-import mysql2 from "mysql2";
+import { Dialect, Sequelize } from 'sequelize';
+import mysql2 from 'mysql2';
 
 export const sequelize = new Sequelize(
   process.env.DB_NAME as string,
@@ -11,5 +11,5 @@ export const sequelize = new Sequelize(
     dialect: process.env.DB_DIALECT as Dialect,
     dialectModule: mysql2,
     logging: false,
-  },
+  }
 );

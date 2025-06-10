@@ -1,14 +1,22 @@
-import React from "react";
-import { getAddressesByUser } from "@/server/actions/userAddressService";
-import CheckoutClient from "./CheckoutClient";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { Address } from "@/types/Address";
-import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
+import React, { Suspense } from 'react';
+import { getAddressesByUser } from '@/server/actions/userAddressService';
+import CheckoutClient from './CheckoutClient';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { Address } from '@/types/Address';
+import { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
+import { Metadata } from 'next';
+import CheckoutSkeleton from './CheckoutSkeleton';
+
+export const metadata: Metadata = {
+  title: 'Checkout',
+  description: 'Complete your purchase securely',
+  robots: { index: false, follow: false },
+};
 
 // Helper to get userId from cookie/session (adjust as per your auth)
 async function getUserIdFromCookies(cookieStore: ReadonlyRequestCookies) {
-  const userId = cookieStore.get("userId")?.value;
+  const userId = cookieStore.get('userId')?.value;
   return userId ? Number(userId) : null;
 }
 
@@ -20,7 +28,7 @@ export default async function CheckoutPage({
   const SearchParams = await searchParams;
   const cookieStore = await cookies();
   const userId = await getUserIdFromCookies(cookieStore);
-  if (!userId) redirect("/login");
+  if (!userId) redirect('/login');
 
   // Fetch addresses on the server
   const addressesRaw = (await getAddressesByUser(userId)) as Address[];
@@ -38,10 +46,12 @@ export default async function CheckoutPage({
   // Pass a server action for address creation
 
   return (
-    <CheckoutClient
-      addresses={addresses}
-      totalPrice={SearchParams.totalPrice || "0"}
-      userId={userId}
-    />
+    <Suspense fallback={<CheckoutSkeleton />}>
+      <CheckoutClient
+        addresses={addresses}
+        totalPrice={SearchParams.totalPrice || '0'}
+        userId={userId}
+      />
+    </Suspense>
   );
 }

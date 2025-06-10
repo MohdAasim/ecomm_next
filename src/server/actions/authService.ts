@@ -1,13 +1,13 @@
-"use server";
+'use server';
 
-import * as userRepo from "../repositories/userRepository";
-import { sendEmail } from "@/utils/mailer";
-import { generateToken } from "@/utils/jwt.utils";
-import { UserInstance } from "../repositories/userRepository";
-import { validate } from "../middlewares/validateRequest";
-import { logger } from "@/utils/logger";
-import { withErrorBoundary } from "@/utils/actionWrapper";
-import { HttpError } from "@/utils/error/HttpsError";
+import * as userRepo from '../repositories/userRepository';
+import { sendEmail } from '@/utils/mailer';
+import { generateToken } from '@/utils/jwt.utils';
+import { UserInstance } from '../repositories/userRepository';
+import { validate } from '../middlewares/validateRequest';
+import { logger } from '@/utils/logger';
+import { withErrorBoundary } from '@/utils/actionWrapper';
+import { HttpError } from '@/utils/error/HttpsError';
 
 /**
  * Generate a 6-digit OTP as a string.
@@ -22,11 +22,11 @@ const generateOTP = (): string =>
  * @returns {Promise<{ message: string }>} Message indicating OTP was sent.
  */
 export const sendOTPService = async (
-  email: string,
+  email: string
 ): Promise<{ message: string }> => {
   return await withErrorBoundary(async () => {
     // Validate input
-    const { valid, message } = validate("sendOTP", { email });
+    const { valid, message } = validate('sendOTP', { email });
     if (!valid) {
       logger.warn(`Validation failed for sendOTP: ${message}`);
       throw new HttpError(message as string, 400);
@@ -47,13 +47,13 @@ export const sendOTPService = async (
 
     await sendEmail({
       to: email,
-      subject: "Your OTP Code",
+      subject: 'Your OTP Code',
       text: `Your OTP is ${otp}. It is valid for 2 minutes.`,
     });
 
     logger.info(`OTP sent to email: ${email}`);
 
-    return { message: "OTP sent to email" };
+    return { message: 'OTP sent to email' };
   });
 };
 
@@ -66,22 +66,22 @@ export const sendOTPService = async (
  */
 export const verifyOTPService = async (
   email: string,
-  otp: string,
+  otp: string
 ): Promise<{ message: string; token: string; userId: number }> => {
   return await withErrorBoundary(async () => {
     // Validate input
-    const { valid, message } = validate("verifyOTP", { email, otp });
+    const { valid, message } = validate('verifyOTP', { email, otp });
     if (!valid) throw new HttpError(message as string, 400);
 
     const user = await userRepo.findUserByEmail(email);
     if (!user || user.otp !== otp || new Date() > user.otpExpiresAt!) {
-      throw new HttpError("Invalid or expired OTP", 401);
+      throw new HttpError('Invalid or expired OTP', 401);
     }
 
     await userRepo.clearUserOTP(user);
 
     const token = generateToken({ id: user.id, email: user.email });
 
-    return { message: "Login successful", token, userId: user.id! };
+    return { message: 'Login successful', token, userId: user.id! };
   });
 };

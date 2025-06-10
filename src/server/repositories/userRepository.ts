@@ -1,5 +1,5 @@
-import { User } from "../models/User";
-import { Model } from "sequelize";
+import { User } from '../models/User';
+import { Model } from 'sequelize';
 
 // Define the User attributes type
 export interface UserAttributes {
@@ -15,13 +15,13 @@ export interface UserAttributes {
 export type UserInstance = Model<UserAttributes> & UserAttributes;
 
 export const findUserByEmail = async (
-  email: string,
+  email: string
 ): Promise<UserInstance | null> => {
   return (await User.findOne({ where: { email } })) as UserInstance | null;
 };
 
 export const createUser = async (email: string): Promise<UserInstance> => {
-  console.log("in create User");
+  console.log('in create User');
 
   return (await User.create({ email })) as UserInstance;
 };
@@ -29,13 +29,13 @@ export const createUser = async (email: string): Promise<UserInstance> => {
 export const updateUserOTP = async (
   user: UserInstance,
   otp: string,
-  otpExpiresAt: Date,
+  otpExpiresAt: Date
 ): Promise<UserInstance> => {
   return await user.update({ otp, otpExpiresAt });
 };
 
 export const clearUserOTP = async (
-  user: UserInstance,
+  user: UserInstance
 ): Promise<UserInstance> => {
   return await user.update({ otp: null, otpExpiresAt: null });
 };

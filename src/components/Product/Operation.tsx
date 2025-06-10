@@ -1,8 +1,8 @@
-"use client";
-import { useCart } from "@/context/CartContext";
-import { Product } from "@/types/Carttypes";
-import React, { useState } from "react";
-import { toast } from "react-toastify";
+'use client';
+import { useCart } from '@/context/CartContext';
+import { Product } from '@/types/Carttypes';
+import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 
 function Operation({ product }: { product: Product }) {
   const [quantity, setQuantity] = useState(1);

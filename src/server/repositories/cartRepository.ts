@@ -1,6 +1,6 @@
-import { CartItem } from "../models/Cart";
-import { Product } from "../models/Product";
-import { Model } from "sequelize";
+import { CartItem } from '../models/Cart';
+import { Product } from '../models/Product';
+import { Model } from 'sequelize';
 
 // Export the CartItemInstance type
 export type CartItemInstance = Model & {
@@ -14,7 +14,7 @@ export type CartItemInstance = Model & {
 export const findOrCreateCartItem = async (
   userId: number,
   productId: number,
-  quantity: number,
+  quantity: number
 ): Promise<[CartItemInstance, boolean]> => {
   return (await CartItem.findOrCreate({
     where: { userId, productId },
@@ -24,7 +24,7 @@ export const findOrCreateCartItem = async (
 
 export const findCartItem = async (
   userId: number,
-  productId: number,
+  productId: number
 ): Promise<CartItemInstance | null> => {
   return (await CartItem.findOne({
     where: { userId, productId },
@@ -32,7 +32,7 @@ export const findCartItem = async (
 };
 
 export const findAllCartItems = async (
-  userId: number,
+  userId: number
 ): Promise<CartItemInstance[]> => {
   return (await CartItem.findAll({
     where: { userId },
@@ -42,7 +42,7 @@ export const findAllCartItems = async (
 
 export const updateCartItemQuantity = async (
   item: CartItemInstance,
-  quantity: number,
+  quantity: number
 ): Promise<CartItemInstance> => {
   item.quantity = quantity;
   return await item.save();
@@ -50,7 +50,7 @@ export const updateCartItemQuantity = async (
 
 export const incrementCartItemQuantity = async (
   item: CartItemInstance,
-  quantity: number,
+  quantity: number
 ): Promise<CartItemInstance> => {
   item.quantity += quantity;
   return await item.save();
@@ -58,7 +58,7 @@ export const incrementCartItemQuantity = async (
 
 export const deleteCartItem = async (
   userId: number,
-  productId: number,
+  productId: number
 ): Promise<number> => {
   return await CartItem.destroy({ where: { userId, productId } });
 };

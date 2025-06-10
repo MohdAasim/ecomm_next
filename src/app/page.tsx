@@ -1,9 +1,16 @@
-import { getProducts } from "@/server/actions/productService";
-import ProductListingClient from "./ProductListingClient";
-import { Product } from "@/types/Product";
-import Link from "next/link";
-import ItemCard from "@/components/shared/itemCard/ItemCard";
-import ErrorMessage from "@/components/shared/errorMessage/ErrorMessage";
+import { getProducts } from '@/server/actions/productService';
+import ProductListingClient from './ProductListingClient';
+import { Product } from '@/types/Product';
+import Link from 'next/link';
+import ItemCard from '@/components/shared/itemCard/ItemCard';
+import ErrorMessage from '@/components/shared/errorMessage/ErrorMessage';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Products - Ecommerce App',
+  description: 'Browse our wide selection of quality products at great prices',
+  keywords: ['ecommerce', 'shopping', 'products', 'online store'],
+};
 
 interface PageProps {
   searchParams: Promise<{
@@ -19,8 +26,8 @@ interface PageProps {
 export default async function ProductListing({ searchParams }: PageProps) {
   const searchParam = await searchParams;
   const page = Number(searchParam.page) || 1;
-  const search = searchParam?.search || "";
-  const category = searchParam?.category || "";
+  const search = searchParam?.search || '';
+  const category = searchParam?.category || '';
   const minPrice = searchParam?.minPrice
     ? Number(searchParam.minPrice)
     : undefined;
@@ -39,7 +46,7 @@ export default async function ProductListing({ searchParams }: PageProps) {
   // Convert Sequelize instances to plain objects
   const plainProducts = products.map(
     (p: Product & { toJSON?: () => Product }) =>
-      typeof p.toJSON === "function" ? p.toJSON() : p,
+      typeof p.toJSON === 'function' ? p.toJSON() : p
   );
 
   return (
@@ -54,17 +61,17 @@ export default async function ProductListing({ searchParams }: PageProps) {
     >
       {products.length === 0 ? (
         <div>
-          <ErrorMessage message={"No Product Found"} />{" "}
+          <ErrorMessage message={'No Product Found'} />{' '}
         </div>
       ) : (
         <>
-          <div className="products-grid">
+          <main className="products-grid">
             {products.map((item: Product) => (
-              <Link href={"/desc/" + item.id} key={item.id}>
+              <Link href={'/desc/' + item.id} key={item.id}>
                 <ItemCard data={item} />
               </Link>
             ))}
-          </div>
+          </main>
         </>
       )}
     </ProductListingClient>

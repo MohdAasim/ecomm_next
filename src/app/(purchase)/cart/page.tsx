@@ -1,6 +1,6 @@
-"use client";
-import "./CartPage.css";
-import { useCartPage } from "@/hooks/useCartPage";
+'use client';
+import './CartPage.css';
+import { useCartPage } from '@/hooks/useCartPage';
 
 const CartPage = () => {
   const {
@@ -12,7 +12,7 @@ const CartPage = () => {
   } = useCartPage();
 
   return (
-    <div className="cart-container">
+    <main className="cart-container">
       <h2 className="cart-title">Your Cart</h2>
 
       {safeCartItems.length === 0 ? (
@@ -32,7 +32,7 @@ const CartPage = () => {
                     onClick={() =>
                       updateQuantity(
                         item.productId,
-                        Math.max(item.quantity - 1, 1),
+                        Math.max(item.quantity - 1, 1)
                       )
                     }
                   >
@@ -69,7 +69,7 @@ const CartPage = () => {
           </div>
         </>
       )}
-    </div>
+    </main>
   );
 };
 

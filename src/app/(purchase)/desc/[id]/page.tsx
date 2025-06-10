@@ -1,9 +1,10 @@
-import { getProductById, getProducts } from "@/server/actions/productService";
-import ErrorMessage from "@/components/shared/errorMessage/ErrorMessage";
-import Image from "next/image";
-import Operation from "@/components/Product/Operation";
-import "./ProductDesc.css";
-import { Product } from "@/types/Product";
+import { getProductById, getProducts } from '@/server/actions/productService';
+import ErrorMessage from '@/components/shared/errorMessage/ErrorMessage';
+import Image from 'next/image';
+import Operation from '@/components/Product/Operation';
+import './ProductDesc.css';
+import { Product } from '@/types/Product';
+import type { Metadata } from 'next';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -28,13 +29,33 @@ export async function generateStaticParams() {
 
 //-------------------------------------
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const resolvedParams = await params;
+  const product = await getProductById(resolvedParams.id);
+
+  return {
+    title: `${product.name} - Ecommerce App`,
+    description: product.description,
+    keywords: [product.category, product.name, 'ecommerce'],
+    openGraph: {
+      title: product.name,
+      description: product.description,
+      images: [product.image_url],
+    },
+  };
+}
+
 export default async function Page({ params }: PageProps) {
   const resolvedParams = await params;
   const product = await getProductById(resolvedParams.id);
 
   // Convert to plain object if needed (Sequelize instance)
   const plainProduct =
-    typeof product.toJSON === "function" ? product.toJSON() : product;
+    typeof product.toJSON === 'function' ? product.toJSON() : product;
 
   if (!product) {
     return <ErrorMessage message="Failed to load product" />;

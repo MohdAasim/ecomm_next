@@ -1,20 +1,20 @@
-"use client";
-import { useEffect, useState } from "react";
-import { sendOTPService, verifyOTPService } from "@/server/actions/authService";
-import { useAuth } from "@/context/AuthContext";
-import "./SignIn.css";
+'use client';
+import { useEffect, useState } from 'react';
+import { sendOTPService, verifyOTPService } from '@/server/actions/authService';
+import { useAuth } from '@/context/AuthContext';
+import './SignIn.css';
 
 const SignIn = () => {
-  const [email, setEmail] = useState("");
-  const [otp, setOtp] = useState("");
-  const [step, setStep] = useState<"email" | "otp">("email");
+  const [email, setEmail] = useState('');
+  const [otp, setOtp] = useState('');
+  const [step, setStep] = useState<'email' | 'otp'>('email');
   const [timer, setTimer] = useState(120);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const { login } = useAuth();
 
   // Timer effect
   useEffect(() => {
-    if (step === "otp" && timer > 0) {
+    if (step === 'otp' && timer > 0) {
       const interval = setInterval(() => setTimer((t) => t - 1), 1000);
       return () => clearInterval(interval);
     }
@@ -24,28 +24,28 @@ const SignIn = () => {
     /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email);
 
   const handleSendOtp = async () => {
-    setError("");
+    setError('');
     if (!validateEmail(email)) {
-      setError("Invalid email");
+      setError('Invalid email');
       return;
     }
-    setStep("otp");
+    setStep('otp');
     setTimer(120);
     try {
       await sendOTPService(email);
     } catch {
-      setError("Failed to send OTP. Please try again.");
-      setStep("email");
+      setError('Failed to send OTP. Please try again.');
+      setStep('email');
     }
   };
 
   const handleVerifyOtp = async () => {
-    setError("");
+    setError('');
     try {
       const response = await verifyOTPService(email, otp);
       login(response.token, response.userId);
     } catch {
-      setError("Invalid OTP");
+      setError('Invalid OTP');
     }
   };
 
@@ -69,7 +69,7 @@ const SignIn = () => {
       <div className="form-box">
         <h2>Ecomm</h2>
 
-        {step === "email" && (
+        {step === 'email' && (
           <>
             <input
               type="email"
@@ -81,7 +81,7 @@ const SignIn = () => {
           </>
         )}
 
-        {step === "otp" && (
+        {step === 'otp' && (
           <>
             <p>
               OTP sent to <strong>{email}</strong>

@@ -1,14 +1,14 @@
-"use server";
-import * as addressRepo from "../repositories/userAddressRepository";
+'use server';
+import * as addressRepo from '../repositories/userAddressRepository';
 import {
   UserAddressAttributes,
   UserAddressInstance,
   UserInstance,
-} from "../repositories/userAddressRepository";
-import { validate } from "../middlewares/validateRequest";
-import { logger } from "@/utils/logger";
-import { withErrorBoundary } from "@/utils/actionWrapper";
-import { HttpError } from "@/utils/error/HttpsError";
+} from '../repositories/userAddressRepository';
+import { validate } from '../middlewares/validateRequest';
+import { logger } from '@/utils/logger';
+import { withErrorBoundary } from '@/utils/actionWrapper';
+import { HttpError } from '@/utils/error/HttpsError';
 
 /**
  * Create a new address for a user.
@@ -19,10 +19,10 @@ import { HttpError } from "@/utils/error/HttpsError";
  */
 export const createAddress = async (
   userId: number,
-  addressData: UserAddressAttributes,
+  addressData: UserAddressAttributes
 ): Promise<UserAddressInstance> => {
   return await withErrorBoundary(async () => {
-    const { valid, message } = validate("createAddress", {
+    const { valid, message } = validate('createAddress', {
       userId,
       ...addressData,
     });
@@ -34,7 +34,7 @@ export const createAddress = async (
     const user: UserInstance | null = await addressRepo.findUserById(userId);
     if (!user) {
       logger.error(`User not found: ${userId}`);
-      throw new HttpError("User not found", 404);
+      throw new HttpError('User not found', 404);
     }
 
     logger.info(`Creating address for user ${userId}`);
@@ -48,7 +48,7 @@ export const createAddress = async (
  * @returns {Promise<UserAddressInstance[]>} List of addresses.
  */
 export const getAddressesByUser = async (
-  userId: number,
+  userId: number
 ): Promise<UserAddressInstance[]> => {
   return await withErrorBoundary(async () => {
     return await addressRepo.findAddressesByUser(userId);
@@ -66,11 +66,11 @@ export const getAddressesByUser = async (
 export const updateAddress = async (
   addressId: number,
   userId: number,
-  newData: Partial<UserAddressAttributes>,
+  newData: Partial<UserAddressAttributes>
 ): Promise<UserAddressInstance> => {
   return await withErrorBoundary(async () => {
     // Validate input
-    const { valid, message } = validate("updateAddress", {
+    const { valid, message } = validate('updateAddress', {
       userId,
       ...newData,
     });
@@ -78,7 +78,7 @@ export const updateAddress = async (
 
     const address: UserAddressInstance | null =
       await addressRepo.findAddressByIdAndUser(addressId, userId);
-    if (!address) throw new HttpError("Address not found", 404);
+    if (!address) throw new HttpError('Address not found', 404);
 
     return await addressRepo.updateAddress(address, newData);
   });
@@ -93,30 +93,30 @@ export const updateAddress = async (
  */
 export const deleteAddress = async (
   addressId: number,
-  userId: number,
+  userId: number
 ): Promise<{ message: string }> => {
   return await withErrorBoundary(async () => {
     // Validate input
-    const { valid, message } = validate("deleteAddress", { userId });
+    const { valid, message } = validate('deleteAddress', { userId });
     if (!valid) throw new HttpError(message as string, 400);
 
     const address: UserAddressInstance | null =
       await addressRepo.findAddressByIdAndUser(addressId, userId);
-    if (!address) throw new HttpError("Address not found", 404);
+    if (!address) throw new HttpError('Address not found', 404);
 
     await addressRepo.deleteAddress(address);
-    return { message: "Address deleted successfully" };
+    return { message: 'Address deleted successfully' };
   });
 };
 
 export async function handleCreateAddress(formData: FormData, userId: number) {
   return await withErrorBoundary(async () => {
     // "use server";
-    const street = formData.get("street") as string;
-    const city = formData.get("city") as string;
-    const state = formData.get("state") as string;
-    const postalCode = formData.get("postalCode") as string;
-    const country = formData.get("country") as string;
+    const street = formData.get('street') as string;
+    const city = formData.get('city') as string;
+    const state = formData.get('state') as string;
+    const postalCode = formData.get('postalCode') as string;
+    const country = formData.get('country') as string;
     await createAddress(userId as number, {
       street,
       city,

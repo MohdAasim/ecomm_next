@@ -1,4 +1,10 @@
-import React from "react";
+import { Metadata } from 'next';
+import React from 'react';
+
+export const metadata: Metadata = {
+  title: 'About Us',
+  description: 'Learn more about our mission and commitment to quality',
+};
 
 const AboutUs = () => {
   return (
@@ -23,10 +29,10 @@ const AboutUs = () => {
 
 const styles: { [key: string]: React.CSSProperties } = {
   container: {
-    maxWidth: "800px",
-    margin: "40px auto",
-    padding: "0 20px",
-    fontFamily: "Arial, sans-serif",
+    maxWidth: '800px',
+    margin: '40px auto',
+    padding: '0 20px',
+    fontFamily: 'Arial, sans-serif',
     lineHeight: 1.6,
   },
 };
