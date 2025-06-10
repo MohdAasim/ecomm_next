@@ -1,6 +1,6 @@
-import React from "react";
-import { CATEGORY_FILTER } from "../../../utils/constants";
-import "./Filter.css";
+import React from 'react';
+import { CATEGORY_FILTER } from '../../../utils/constants';
+import './Filter.css';
 
 interface FilterProps {
   category: string;
@@ -36,7 +36,7 @@ const Filter: React.FC<FilterProps> = ({
       <input
         type="number"
         placeholder="Min Price"
-        value={minPrice ?? ""}
+        value={minPrice ?? ''}
         onChange={(e) => {
           const value = e.target.value;
           onMinPriceChange(value ? Number(value) : undefined);
@@ -46,7 +46,7 @@ const Filter: React.FC<FilterProps> = ({
       <input
         type="number"
         placeholder="Max Price"
-        value={maxPrice ?? ""}
+        value={maxPrice ?? ''}
         onChange={(e) => {
           const value = e.target.value;
           onMaxPriceChange(value ? Number(value) : undefined);

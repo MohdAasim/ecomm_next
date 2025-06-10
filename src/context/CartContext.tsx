@@ -1,13 +1,13 @@
-"use client";
-import React, { createContext, useContext, useState, useEffect } from "react";
-import useSWR from "swr";
-import { useAuth } from "./AuthContext";
+'use client';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import useSWR from 'swr';
+import { useAuth } from './AuthContext';
 import type {
   CartItem,
   AddToCartInput,
   CartContextType,
-} from "../types/Carttypes";
-import { Product } from "@/types/Product";
+} from '../types/Carttypes';
+import { Product } from '@/types/Product';
 
 type CartItemBackend = {
   id?: number;
@@ -30,7 +30,7 @@ type CartProviderProps = {
   children: React.ReactNode;
 };
 
-const LOCAL_CART_KEY = "guest_cart";
+const LOCAL_CART_KEY = 'guest_cart';
 
 // Helpers for localStorage guest cart
 const getLocalCart = (): CartItem[] => {
@@ -46,13 +46,13 @@ const setLocalCart = (cart: CartItem[]) => {
 };
 
 const fetcher = async (url: string) => {
-  const res = await fetch(url, { credentials: "include" });
-  if (!res.ok) throw new Error("Failed to fetch cart");
+  const res = await fetch(url, { credentials: 'include' });
+  if (!res.ok) throw new Error('Failed to fetch cart');
   const items = await res.json();
   return items.map((item: CartItemBackend): CartItem => {
-    const plain = typeof item.toJSON === "function" ? item.toJSON() : item;
+    const plain = typeof item.toJSON === 'function' ? item.toJSON() : item;
     const product = plain.Product ?? plain.product;
-    if (!product) throw new Error("Cart item is missing Product data");
+    if (!product) throw new Error('Cart item is missing Product data');
     return {
       id: plain.id,
       productId: plain.productId,
@@ -84,12 +84,12 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
   // SWR for server-side cart
   const { data: cartItemsServer = [], mutate } = useSWR(
-    isAuthenticated ? "/api/cart" : null,
+    isAuthenticated ? '/api/cart' : null,
     fetcher,
     {
       fallbackData: [],
       revalidateOnFocus: true,
-    },
+    }
   );
 
   // Cart items to expose
@@ -98,13 +98,13 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   // Add to cart
   const addToCart = async (item: AddToCartInput) => {
     if (isAuthenticated) {
-      await fetch("/api/cart", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      await fetch('/api/cart', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           items: [{ productId: item.productId, quantity: item.quantity }],
         }),
-        credentials: "include",
+        credentials: 'include',
       });
       mutate();
     } else {
@@ -113,12 +113,12 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         let updated: CartItem[];
         if (idx > -1) {
           updated = prev.map((ci, i) =>
-            i === idx ? { ...ci, quantity: ci.quantity + item.quantity } : ci,
+            i === idx ? { ...ci, quantity: ci.quantity + item.quantity } : ci
           );
         } else {
           if (!item.Product) {
             throw new Error(
-              "Product details must be provided for guest cart items",
+              'Product details must be provided for guest cart items'
             );
           }
           updated = [
@@ -141,17 +141,17 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   // Update quantity
   const updateQuantity = async (productId: number, quantity: number) => {
     if (isAuthenticated) {
-      await fetch("/api/cart", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
+      await fetch('/api/cart', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ productId, quantity }),
-        credentials: "include",
+        credentials: 'include',
       });
       mutate();
     } else {
       setGuestCart((prev) => {
         const updated = prev.map((ci) =>
-          ci.productId === productId ? { ...ci, quantity } : ci,
+          ci.productId === productId ? { ...ci, quantity } : ci
         );
         setLocalCart(updated);
         return updated;
@@ -162,11 +162,11 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   // Remove from cart
   const removeFromCart = async (productId: number) => {
     if (isAuthenticated) {
-      await fetch("/api/cart", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
+      await fetch('/api/cart', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ productId }),
-        credentials: "include",
+        credentials: 'include',
       });
       mutate();
     } else {
@@ -181,11 +181,11 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   // Clear cart
   const clearCart = async () => {
     if (isAuthenticated) {
-      await fetch("/api/cart", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
+      await fetch('/api/cart', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({}),
-        credentials: "include",
+        credentials: 'include',
       });
       mutate();
     } else {
@@ -197,16 +197,16 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   // Sync local cart to backend after signin
   const syncCartToBackend = async () => {
     if (isAuthenticated && guestCart.length > 0) {
-      await fetch("/api/cart", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      await fetch('/api/cart', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           items: guestCart.map(({ productId, quantity }) => ({
             productId,
             quantity,
           })),
         }),
-        credentials: "include",
+        credentials: 'include',
       });
       setGuestCart([]);
       setLocalCart([]);
@@ -232,6 +232,6 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
 export const useCart = () => {
   const ctx = useContext(CartContext);
-  if (!ctx) throw new Error("useCart must be used within CartProvider");
+  if (!ctx) throw new Error('useCart must be used within CartProvider');
   return ctx;
 };

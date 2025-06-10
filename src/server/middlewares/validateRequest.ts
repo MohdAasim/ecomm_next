@@ -1,5 +1,5 @@
-import Joi, { Schema } from "joi";
-import { logger } from "@/utils/logger"; // Add this import
+import Joi, { Schema } from 'joi';
+import { logger } from '@/utils/logger'; // Add this import
 
 // Define schemas for each route/action
 const schemas: Record<string, Schema> = {
@@ -40,7 +40,7 @@ const schemas: Record<string, Schema> = {
         Joi.object({
           productId: Joi.number().integer().required(),
           quantity: Joi.number().integer().min(1).required(),
-        }),
+        })
       )
       .min(1)
       .required(),
@@ -63,7 +63,7 @@ const schemas: Record<string, Schema> = {
 /* eslint-disable */
 export function validate(
   schemaName: string,
-  data: any,
+  data: any
 ): { valid: boolean; value?: any; message?: string } {
   const schema = schemas[schemaName];
   if (!schema) {
@@ -75,7 +75,7 @@ export function validate(
   if (error) {
     logger.warn(
       `Validation failed for ${schemaName}: ${error.details[0].message}`,
-      { data },
+      { data }
     );
     return { valid: false, message: error.details[0].message };
   }

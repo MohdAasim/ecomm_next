@@ -1,6 +1,6 @@
 export const generatePages = (
   currentPage: number,
-  totalPages: number,
+  totalPages: number
 ): (number | string)[] => {
   const pages: (number | string)[] = [];
 
@@ -9,7 +9,7 @@ export const generatePages = (
   } else {
     pages.push(1);
 
-    if (currentPage > 4) pages.push("...");
+    if (currentPage > 4) pages.push('...');
 
     const start = Math.max(2, currentPage - 1);
     const end = Math.min(totalPages - 1, currentPage + 1);
@@ -17,7 +17,7 @@ export const generatePages = (
       pages.push(i);
     }
 
-    if (currentPage < totalPages - 3) pages.push("...");
+    if (currentPage < totalPages - 3) pages.push('...');
 
     pages.push(totalPages);
   }

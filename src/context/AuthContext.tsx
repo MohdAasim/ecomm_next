@@ -1,7 +1,7 @@
-"use client";
-import React, { createContext, useContext, useState } from "react";
-import Cookies from "js-cookie";
-import { useRouter, useSearchParams } from "next/navigation";
+'use client';
+import React, { createContext, useContext, useState } from 'react';
+import Cookies from 'js-cookie';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -17,27 +17,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [token, setToken] = useState<string | null>(
-    Cookies.get("token") || null,
+    Cookies.get('token') || null
   );
   const [userId, setUserId] = useState<number | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
   // Get the "from" param from the URL if present, otherwise default to "/"
-  const from = searchParams.get("from") || "/";
+  const from = searchParams.get('from') || '/';
 
   const login = (newToken: string, newUserId: number) => {
-    Cookies.set("token", newToken, { expires: 2 });
-    Cookies.set("userId", String(newUserId), { expires: 2 }); // <-- Add this line
+    Cookies.set('token', newToken, { expires: 2 });
+    Cookies.set('userId', String(newUserId), { expires: 2 }); // <-- Add this line
     setToken(newToken);
     setUserId(newUserId);
     router.push(from); // Redirect to the original page or home
   };
 
   const logout = () => {
-    Cookies.remove("token");
+    Cookies.remove('token');
     setToken(null);
     setUserId(null);
-    router.push("/signin");
+    router.push('/signin');
   };
 
   return (
@@ -51,6 +51,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth must be used within AuthProvider");
+  if (!context) throw new Error('useAuth must be used within AuthProvider');
   return context;
 };

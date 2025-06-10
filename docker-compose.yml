@@ -9,7 +9,7 @@ services:
       - /app/node_modules
       - /app/.next
     ports:
-      - "3000:3000"
+      - '3000:3000'
     env_file:
       - .env.production
     environment:
@@ -28,12 +28,12 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: ecommerce_app
     ports:
-      - "3306:3306"
+      - '3306:3306'
     volumes:
       - db-data:/var/lib/mysql
     healthcheck:
       test:
-        ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+        ['CMD', 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'root', '-proot']
       interval: 30s
       retries: 10
       start_period: 60s

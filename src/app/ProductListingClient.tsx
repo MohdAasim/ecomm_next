@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
-import Filter from "@/components/shared/filters/Filter";
-import Pagination from "@/components/shared/pagination/Pagination";
-import SearchBar from "@/components/shared/searchBar/SearchBar";
-import { Product } from "@/types/Product";
-import "./ProductListing.css";
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import Filter from '@/components/shared/filters/Filter';
+import Pagination from '@/components/shared/pagination/Pagination';
+import SearchBar from '@/components/shared/searchBar/SearchBar';
+import { Product } from '@/types/Product';
+import './ProductListing.css';
 
 type Props = {
   products: Product[];
@@ -40,28 +40,28 @@ export default function ProductListingClient({
       if (value) newParams.set(key, value);
       else newParams.delete(key);
     });
-    router.push("?" + newParams.toString());
+    router.push('?' + newParams.toString());
   };
 
   // Only trigger search when button is clicked and input is not empty
   const handleSearch = () => {
-    if (searchInput.trim() !== "") {
-      updateParams({ search: searchInput, page: "1" });
+    if (searchInput.trim() !== '') {
+      updateParams({ search: searchInput, page: '1' });
     } else {
-      updateParams({ search: undefined, page: "1" });
+      updateParams({ search: undefined, page: '1' });
     }
   };
 
   // Automatically trigger search when input becomes empty
   useEffect(() => {
-    if (searchInput === "") {
-      updateParams({ search: undefined, page: "1" });
+    if (searchInput === '') {
+      updateParams({ search: undefined, page: '1' });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchInput]);
 
   return (
-    <div className="container">
+    <section className="container">
       <div className="top-controls">
         <SearchBar
           searchTerm={searchInput}
@@ -73,13 +73,13 @@ export default function ProductListingClient({
           minPrice={minPrice}
           maxPrice={maxPrice}
           onCategoryChange={(value) =>
-            updateParams({ category: value, page: "1" })
+            updateParams({ category: value, page: '1' })
           }
           onMinPriceChange={(value) =>
-            updateParams({ minPrice: value?.toString() || "", page: "1" })
+            updateParams({ minPrice: value?.toString() || '', page: '1' })
           }
           onMaxPriceChange={(value) =>
-            updateParams({ maxPrice: value?.toString() || "", page: "1" })
+            updateParams({ maxPrice: value?.toString() || '', page: '1' })
           }
         />
       </div>
@@ -91,6 +91,6 @@ export default function ProductListingClient({
           onPageChange={(newPage) => updateParams({ page: newPage.toString() })}
         />
       )}
-    </div>
+    </section>
   );
 }

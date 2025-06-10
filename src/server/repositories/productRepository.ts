@@ -1,5 +1,5 @@
-import { Product } from "../models/Product";
-import { WhereOptions } from "sequelize";
+import { Product } from '../models/Product';
+import { WhereOptions } from 'sequelize';
 
 // Define the Product attributes type
 export interface ProductAttributes {
@@ -20,19 +20,19 @@ type ProductFilters = WhereOptions<ProductAttributes>;
 export const findAndCountProducts = async (
   filters: ProductFilters,
   limit: number,
-  offset: number,
+  offset: number
 ) => {
   return await Product.findAndCountAll({
     where: filters,
     limit,
     offset,
-    order: [["createdAt", "DESC"]],
+    order: [['createdAt', 'DESC']],
   });
 };
 
 // createProduct expects ProductAttributes (except id, createdAt, updatedAt)
 export const createProduct = async (
-  data: Omit<ProductAttributes, "id" | "createdAt" | "updatedAt">,
+  data: Omit<ProductAttributes, 'id' | 'createdAt' | 'updatedAt'>
 ) => {
   return await Product.create(data);
 };

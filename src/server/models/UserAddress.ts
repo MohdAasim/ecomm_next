@@ -1,7 +1,7 @@
-import { DataTypes } from "sequelize";
-import { sequelize } from "../config/database.config";
+import { DataTypes } from 'sequelize';
+import { sequelize } from '../config/database.config';
 
-export const UserAddress = sequelize.define("UserAddress", {
+export const UserAddress = sequelize.define('UserAddress', {
   street: {
     type: DataTypes.STRING,
     allowNull: false,

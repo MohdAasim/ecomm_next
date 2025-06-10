@@ -1,5 +1,5 @@
-import { User, UserAddress } from "../models/associations";
-import { Model } from "sequelize";
+import { User, UserAddress } from '../models/associations';
+import { Model } from 'sequelize';
 
 // Define the UserAddress attributes type
 export interface UserAddressAttributes {
@@ -23,7 +23,7 @@ export type UserInstance = Model & { id: number };
 
 // Find user by ID
 export const findUserById = async (
-  userId: number,
+  userId: number
 ): Promise<UserInstance | null> => {
   return (await User.findByPk(userId)) as UserInstance | null;
 };
@@ -33,8 +33,8 @@ export const createAddress = async (
   userId: number,
   addressData: Omit<
     UserAddressAttributes,
-    "id" | "userId" | "createdAt" | "updatedAt"
-  >,
+    'id' | 'userId' | 'createdAt' | 'updatedAt'
+  >
 ): Promise<UserAddressInstance> => {
   return (await UserAddress.create({
     userId,
@@ -44,7 +44,7 @@ export const createAddress = async (
 
 // Find all addresses for a user
 export const findAddressesByUser = async (
-  userId: number,
+  userId: number
 ): Promise<UserAddressInstance[]> => {
   return (await UserAddress.findAll({
     where: { userId },
@@ -54,7 +54,7 @@ export const findAddressesByUser = async (
 // Find a specific address by addressId and userId
 export const findAddressByIdAndUser = async (
   addressId: number,
-  userId: number,
+  userId: number
 ): Promise<UserAddressInstance | null> => {
   return (await UserAddress.findOne({
     where: { id: addressId, userId },
@@ -64,14 +64,14 @@ export const findAddressByIdAndUser = async (
 // Update an address
 export const updateAddress = async (
   address: UserAddressInstance,
-  newData: Partial<UserAddressAttributes>,
+  newData: Partial<UserAddressAttributes>
 ): Promise<UserAddressInstance> => {
   return await address.update(newData);
 };
 
 // Delete an address
 export const deleteAddress = async (
-  address: UserAddressInstance,
+  address: UserAddressInstance
 ): Promise<void> => {
   await address.destroy();
 };

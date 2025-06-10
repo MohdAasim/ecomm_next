@@ -1,7 +1,7 @@
-"use client";
-import { useEffect, useRef } from "react";
-import { useAuth } from "../../../context/AuthContext";
-import { useCart } from "../../../context/CartContext";
+'use client';
+import { useEffect, useRef } from 'react';
+import { useAuth } from '../../../context/AuthContext';
+import { useCart } from '../../../context/CartContext';
 
 const AppContextWrapper: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -14,7 +14,7 @@ const AppContextWrapper: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     if (isAuthenticated && !hasSynced.current) {
       console.log(
-        "Calling syncCartToBackend------------------------------------------------",
+        'Calling syncCartToBackend------------------------------------------------'
       );
       syncCartToBackend();
       hasSynced.current = true;

@@ -1,11 +1,11 @@
-"use server";
-import * as productRepo from "../repositories/productRepository";
-import { Op } from "sequelize";
-import { ALLOWED_CATEGORIES } from "@/utils/constants";
-import { validate } from "../middlewares/validateRequest";
-import { logger } from "@/utils/logger";
-import { withErrorBoundary } from "@/utils/actionWrapper";
-import { HttpError } from "@/utils/error/HttpsError";
+'use server';
+import * as productRepo from '../repositories/productRepository';
+import { Op } from 'sequelize';
+import { ALLOWED_CATEGORIES } from '@/utils/constants';
+import { validate } from '../middlewares/validateRequest';
+import { logger } from '@/utils/logger';
+import { withErrorBoundary } from '@/utils/actionWrapper';
+import { HttpError } from '@/utils/error/HttpsError';
 
 /**
  * Get a paginated list of products with optional filters.
@@ -57,7 +57,7 @@ export const getProducts = async (queryParams: any): Promise<any> => {
     const { count, rows } = await productRepo.findAndCountProducts(
       where,
       limit,
-      offset,
+      offset
     );
 
     return {
@@ -81,7 +81,7 @@ export const getProducts = async (queryParams: any): Promise<any> => {
 export const createProduct = async (productData: any): Promise<any> => {
   return await withErrorBoundary(async () => {
     // Validate input
-    const { valid, message } = validate("createProduct", productData);
+    const { valid, message } = validate('createProduct', productData);
     if (!valid) {
       logger.warn(`Product validation failed: ${message}`);
       throw new HttpError(message as string, 400);
@@ -90,15 +90,15 @@ export const createProduct = async (productData: any): Promise<any> => {
     const { name, price, category } = productData;
 
     if (!name || !price) {
-      logger.warn("Product creation failed: Name and price are required.");
-      throw new HttpError("Name and price are required.", 400);
+      logger.warn('Product creation failed: Name and price are required.');
+      throw new HttpError('Name and price are required.', 400);
     }
 
     if (category && !ALLOWED_CATEGORIES.includes(category.toLowerCase())) {
       logger.warn(`Invalid category: ${category}`);
       throw new HttpError(
-        `Invalid category. Allowed categories are: ${ALLOWED_CATEGORIES.join(", ")}.`,
-        400,
+        `Invalid category. Allowed categories are: ${ALLOWED_CATEGORIES.join(', ')}.`,
+        400
       );
     }
 
@@ -117,7 +117,7 @@ export const getProductById = async (id: number | string): Promise<any> => {
   return await withErrorBoundary(async () => {
     const product = await productRepo.findProductById(Number(id));
     if (!product) {
-      throw new HttpError("Product not found", 404);
+      throw new HttpError('Product not found', 404);
     }
 
     return product;

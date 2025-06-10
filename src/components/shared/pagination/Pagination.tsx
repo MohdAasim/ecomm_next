@@ -1,6 +1,6 @@
-import React from "react";
-import { generatePages } from "../../../utils/pagination";
-import "./Pagination.css";
+import React from 'react';
+import { generatePages } from '../../../utils/pagination';
+import './Pagination.css';
 
 interface PaginationProps {
   currentPage: number;
@@ -26,12 +26,12 @@ const Pagination: React.FC<PaginationProps> = ({
       </button>
 
       {pages.map((page, idx) =>
-        typeof page === "number" ? (
+        typeof page === 'number' ? (
           <button
             key={idx}
             onClick={() => onPageChange(page)}
             className={`pagination-button ${
-              page === currentPage ? "active" : ""
+              page === currentPage ? 'active' : ''
             }`}
           >
             {page}
@@ -40,7 +40,7 @@ const Pagination: React.FC<PaginationProps> = ({
           <span key={idx} className="pagination-ellipsis">
             ...
           </span>
-        ),
+        )
       )}
 
       <button
