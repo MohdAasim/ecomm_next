@@ -27,7 +27,9 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/server/utils/uploadLocal.js"
+    "src/server/utils/uploadLocal.js",
+    "**/*.test.ts",
+    "**/*.test.tsx"
   ],
   "exclude": ["node_modules"]
 }
