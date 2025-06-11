@@ -11,7 +11,7 @@ interface FilterProps {
   onMaxPriceChange: (value: number | undefined) => void;
 }
 
-const Filter: React.FC<FilterProps> = ({
+const FilterComponent: React.FC<FilterProps> = ({
   category,
   minPrice,
   maxPrice,
@@ -56,4 +56,8 @@ const Filter: React.FC<FilterProps> = ({
   );
 };
 
-export default React.memo(Filter);
+// Create the memoized component and then set displayName
+const Filter = React.memo(FilterComponent);
+Filter.displayName = 'Filter';
+
+export default Filter;

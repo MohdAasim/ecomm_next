@@ -7,7 +7,7 @@ import { useCart } from '../../context/CartContext';
 import { useHasMounted } from './HeaderClient';
 import './Header.css';
 
-const Header: React.FC<React.HTMLAttributes<HTMLElement>> = (props) => {
+const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { isAuthenticated, logout } = useAuth();
   const router = useRouter();
@@ -31,7 +31,7 @@ const Header: React.FC<React.HTMLAttributes<HTMLElement>> = (props) => {
   };
 
   return (
-    <header className="header" {...props}>
+    <header className="header">
       <div className="header-container">
         <div className="logo">
           <Link href="/">Ecomm</Link>
